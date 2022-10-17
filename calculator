@@ -1,0 +1,20 @@
+#include <stdio.h>
+
+int main()
+{
+  int a, b;
+  
+  printf("두 수를 입력해주세요: ");
+  scanf_s("%d", &a);
+  scanf_s("%d", &b);
+  
+  sum();
+
+  return 0;
+}
+
+void sum(x, y)
+{
+  int s = x + y;
+  printf("두 수의 합은 %d입니다.\n", s)
+}
