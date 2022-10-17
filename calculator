@@ -1,31 +1,26 @@
 #include <stdio.h>
 
-void sum(int x,int y);
+void sum(int x, int y);
 void sub(int x, int y);
 void mul(int x, int y);
 void div(int x, int y);
 
 int main()
 {
-  int a, b;
-  
+  int a, b;  
   printf("두 수를 입력해주세요: ");
   scanf_s("%d", &a);
   scanf_s("%d", &b);
   
-  sum(a,b);
-  
-  sub(a,b);
-  
-  mul(a,b);
-  
+  sum(a,b);  
+  sub(a,b);  
+  mul(a,b);  
   div(a,b);
-
+  
   return 0;
 }
 
-void sum(int x,int y)
-{
+void sum(int x,int y){
   int s = x + y;
   printf("두 수의 합은 %d입니다.\n", s);
   
@@ -33,16 +28,15 @@ void sum(int x,int y)
 
 void sub(int x, int y){
   int sub = x-y;
-  printf("두 수의 차는 %d입니다.\n",sub);
+  printf("두 수의 차는 %d입니다.\n", sub);
 }
 
 void mul(int x, int y){
   int mul = x*y;
-  printf("두 수의 곱은 %d입니다.\n",mul);
+  printf("두 수의 곱은 %d입니다.\n", mul);
 }  
 
-void div(int x, int y)
-{
+void div(int x, int y){
 int div = x/y;
-printf("두 수의 나눗셈은 %d입니다.\n",div);
+printf("두 수의 나눗셈은 %d입니다.\n", div);
 }
