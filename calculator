@@ -8,14 +8,21 @@ int main()
   scanf_s("%d", &a);
   scanf_s("%d", &b);
   
-  sum();
+  sum(a,b);
+  
+  sub(a,b);
 
   return 0;
 }
 
-void sum(x, y)
+void sum(int x,int y)
 {
   int s = x + y;
   printf("두 수의 합은 %d입니다.\n", s);
   
+}
+
+void sub(int x, int y){
+  int sub = x-y;
+  printf("두 수의 차는 %d입니다.\n",sub);
 }
