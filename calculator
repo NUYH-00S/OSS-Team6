@@ -3,6 +3,7 @@
 void sum(int x,int y);
 void sub(int x, int y);
 void mul(int x, int y);
+void div(int x, int y);
 
 int main()
 {
@@ -15,6 +16,10 @@ int main()
   sum(a,b);
   
   sub(a,b);
+  
+  mul(a,b);
+  
+  div(a,b);
 
   return 0;
 }
@@ -35,3 +40,9 @@ void mul(int x, int y){
   int mul = x*y;
   printf("두 수의 곱은 %d입니다.\n",mul);
 }  
+
+void div(int x, int y)
+{
+int div = x/y;
+printf("두 수의 나눗셈은 %d입니다.\n",div);
+}
