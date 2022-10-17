@@ -29,3 +29,8 @@ void sub(int x, int y){
   int sub = x-y;
   printf("두 수의 차는 %d입니다.\n",sub);
 }
+
+void mul(int x, int y){
+  int mul = x*y;
+  printf("두 수의 곱은 %d입니다.\n",mul);
+}  
