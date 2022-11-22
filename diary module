@@ -1,0 +1,37 @@
+#define _CRT_SECURE_NO_WARNINGS
+
+#include<stdio.h>
+
+#define MAX 10000
+
+int main()
+{
+	char line[MAX];
+
+	//입력 함수
+	FILE* file = fopen("d:\\test1.txt", "wb");
+	if (file == NULL) {
+		printf("파일 열기 실패\n");
+		return 1;
+	}
+
+	fputs("다이어리 입력\n", file);
+	fputs("...성공!\n", file);
+
+	fclose(file);
+
+	//출력 함수
+	/*FILE* file = fopen("d:\\test1.txt", "rb");
+	if (file == NULL) {
+		printf("파일 열기 실패\n");
+		return 1;
+	}
+
+	while (fgets(line, MAX, file) != NULL) {
+		printf("%s", line);
+	}
+
+	fclose(file);*/
+
+	return 0;
+}
