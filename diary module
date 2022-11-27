@@ -1,37 +1,37 @@
-#define _CRT_SECURE_NO_WARNINGS
-
-#include<stdio.h>
-
+#define _CRT_SECURE_NO_WARNINGS //이 문장은 헤더 함수 중 가장 위에 있어야 합니다. (무조건)
+#include <stdio.h>
 #define MAX 10000
 
-int main()
+int main(void)
 {
 	char line[MAX];
+	char contents[MAX];
+	printf("\n\t여행은 어떠셨나요? 종료하시려면 EXIT을 입력하고 엔터를 치세요. \n\n");
 
-	//입력 함수
-	FILE* file = fopen("d:\\test1.txt", "wb");
-	if (file == NULL) {
+	char* fileName = "d:\\review.txt"; //여기서 d는 저장할 드라이브 이름입니다. 즉, d드라이브에 저장한다는 의미입니다.
+	FILE* file = fopen(fileName, "a+b");
+	if (file == NULL)
+	{
 		printf("파일 열기 실패\n");
 		return 1;
 	}
-
-	fputs("다이어리 입력\n", file);
-	fputs("...성공!\n", file);
-
-	fclose(file);
-
-	//출력 함수
-	/*FILE* file = fopen("d:\\test1.txt", "rb");
-	if (file == NULL) {
-		printf("파일 열기 실패\n");
-		return 1;
-	}
-
-	while (fgets(line, MAX, file) != NULL) {
+	while (fgets(line, MAX, file) != NULL)
+	{
 		printf("%s", line);
 	}
+	while (1) {
+		scanf("%[^\n]", contents);
+		getchar();
 
-	fclose(file);*/
+		if (strcmp(contents, "EXIT") == 0)
+		{
+			printf("\n\t리뷰 입력을 종료합니다.\n\n");
+			break;
+		}
+		fputs(contents, file);
+		fputs("\n", file);
+	}
+	fclose(file);
 
 	return 0;
 }
