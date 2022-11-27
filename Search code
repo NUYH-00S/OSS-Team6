@@ -1,0 +1,51 @@
+#define _CRT_SECURE_NO_WARNINGS
+#include <stdio.h>
+#include <string.h>
+#include <cstring>
+#include <stdlib.h>
+
+int main(int argc, char *argv[]) {
+
+	printf("청주에서 찾고 싶은 장소가 있나요?.\n");
+	printf("검색해보세요!\n");
+
+	
+
+	char cKeyword[20];	
+	char cData[10][50] = {"백로식당","쫄쫄호떡","마가레뜨","상당집" }; /*이중배열*/
+
+
+	printf("%s\n", cData[0]);
+	printf("%s\n", cData[1]);
+	printf("%s\n", cData[2]);
+
+	int iIdx = 0;
+	for (iIdx = 0; iIdx < 3; iIdx++) {
+
+		printf("검색 하실 단어를 입력하세요.\n");
+		printf("검색 :");
+		scanf_s("%s", &cKeyword);
+		printf("\n검색 결과\n\n");
+		printf("-------------------------------\n\n");
+
+		int iIdxCData = 0, iNoResult = 0;
+		for (iIdxCData = 0; iIdxCData < 10; iIdxCData++)
+		{
+			if (strspn(cKeyword, cData[iIdxCData]) == strlen(cKeyword))
+			{
+				printf("%s\n", cData[iIdxCData]); /*검색결과*/
+				iNoResult++;
+			}
+		}
+			if(iNoResult == 0)
+			{
+				printf("검색결과가 없습니다.\n");
+			}
+}
+		
+		printf("----------------------------------\n\n");
+
+
+		system("pause");
+		system("cls");
+	}
