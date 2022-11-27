@@ -1,4 +1,4 @@
-#define _CRT_SECURE_NO_WARNINGS //이 문장은 헤더 함수 중 가장 위에 있어야 합니다. (무조건)
+#define _CRT_SECURE_NO_WARNINGS //이 문장은 헤더 함수 중 가장 위에 있어야 합니다.
 #include <stdio.h>
 #define MAX 10000
 
