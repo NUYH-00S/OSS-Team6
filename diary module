@@ -1,15 +1,30 @@
-#define _CRT_SECURE_NO_WARNINGS //이 문장은 헤더 함수 중 가장 위에 있어야 합니다.
+#define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #define MAX 10000
+void guide();
+void review_read();
+void review_write();
 
 int main(void)
 {
-	char line[MAX];
-	char contents[MAX];
-	printf("\n\t여행은 어떠셨나요? 종료하시려면 EXIT을 입력하고 엔터를 치세요. \n\n");
+	guide();
+	review_read();
+	review_write();
+	
+	return 0;
+}
 
-	char* fileName = "d:\\review.txt"; //여기서 d는 저장할 드라이브 이름입니다. 즉, d드라이브에 저장한다는 의미입니다.
+
+
+void guide()
+{
+	printf("\n\t여행은 어떠셨나요? 종료하시려면 EXIT을 입력하고 엔터를 치세요. \n\n");
+}
+void review_read()
+{
+	char* fileName = "review.txt";
 	FILE* file = fopen(fileName, "a+b");
+	char line[MAX];
 	if (file == NULL)
 	{
 		printf("파일 열기 실패\n");
@@ -19,6 +34,13 @@ int main(void)
 	{
 		printf("%s", line);
 	}
+	fclose(file);
+}
+void review_write()
+{
+	char* fileName = "review.txt";
+	FILE* file = fopen(fileName, "a+b");
+	char contents[MAX];
 	while (1) {
 		scanf("%[^\n]", contents);
 		getchar();
@@ -32,6 +54,4 @@ int main(void)
 		fputs("\n", file);
 	}
 	fclose(file);
-
-	return 0;
 }
