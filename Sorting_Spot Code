@@ -36,9 +36,6 @@ int main() {
 	sort_distance_spot(list_spot); // 거리에 따른 관광지 정렬함수 실행
 	
 	sort_rating_spot(list_spot); // 별점에 따른 관광지 정렬함수 실행
-
-	category_area_spot(list_spot); // 지역에 따라 관광지를 분류하는 함수 실행
-
 	
 	fclose(p1);
 
