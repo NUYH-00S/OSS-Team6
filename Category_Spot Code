@@ -1,0 +1,107 @@
+#include<stdio.h>
+#define size_spot 18 //관광지의 개수
+typedef struct spot { // 관광지의 이름, 거리, 별점, 지역, 테마의 정보를 담은 구조체
+	char name[20];
+	double distance;
+	int rating;
+	int area;
+	int theme;
+	int ID;
+}spot;
+
+void category_area_spot(spot list[size_spot]); // 관광지를 지역(1.상당구 2.서원구 3.창원구 4.청원구)에 따라 분류하는 함수
+void category_theme(spot list[size_spot]); // 관광지를 테마(1.교육체험관광 2.농촌체험관광 3.역사문화관광 4.생태자연관광)에 따라 분류하는 함수
+
+int main() {
+	int i;
+	spot list_spot[size_spot]; //관광지 구조체 배열 선언
+	FILE* p1;
+
+	p1 = fopen("data_spot.csv", "r"); // 관광지의 정보를 담은 파일을 연다.
+	
+	if (p1 == NULL) {
+		printf("파일 읽기 실패!");
+		return -1;
+	}
+
+	for (i = 0; i < size_spot; i++) { //파일에 있는 정보들을 구조체 배열에 저장
+		fscanf(p1, "%s %d %d %lf %d %d \n", list_spot[i].name, &list_spot[i].area, &list_spot[i].theme, &list_spot[i].distance, &list_spot[i].rating, &list_spot[i].ID);
+    
+	}
+
+	category_area_spot(list_spot); // 지역에 따라 관광지를 분류하는 함수 실행
+
+	category_theme(list_spot); // 테마에 따라 관광지를 분류하는 함수 실행
+
+	fclose(p1);
+	
+	return 0;
+}
+
+void category_area_spot(spot list[size_spot]) {
+	int i, j;
+	printf("1.상당구 2.서원구 3.흥덕구 4.청원구 : ");
+	scanf_s("%d", &i);
+
+	switch (i) {
+	case 1:
+		for (j = 1; j < size_spot; j++) {
+			if (list[j].area == 1)
+				printf("%s %lf %d", list[j].name, list[j].distance, list[j].rating);
+		}
+		break;
+	case 2:
+		for (j = 1; j < size_spot; j++) {
+			if (list[j].area == 2)
+				printf("%s %lf %d", list[j].name, list[j].distance, list[j].rating);
+		}
+		break;
+	case 3:
+		for (j = 1; j < size_spot; j++) {
+			if (list[j].area == 3)
+				printf("%s %lf %d", list[j].name, list[j].distance, list[j].rating);
+		}
+		break;
+	case 4:
+		for (j = 1; j < size_spot; j++) {
+			if (list[j].area == 4)
+				printf("%s %lf %d", list[j].name, list[j].distance, list[j].rating);
+		}
+		break;
+
+	}
+}
+
+void category_theme(spot list[size_spot]) {
+	int i, j;
+	printf("1.교육체험관광 2.농촌체험관광 3.역사문화관광 4.생태자연관광 : ");
+	scanf_s("%d", &i);
+
+	switch (i) {
+	case 1:
+		for (j = 1; j < size_spot; j++) {
+			if (list[j].theme == 1)
+				printf("%s %lf %d", list[j].name, list[j].distance, list[j].rating);
+		}
+		break;
+	case 2:
+		for (j = 1; j < size_spot; j++) {
+			if (list[j].theme == 2)
+				printf("%s %lf %d", list[j].name, list[j].distance, list[j].rating);
+		}
+		break;
+	case 3:
+		for (j = 1; j < size_spot; j++) {
+			if (list[j].theme == 3)
+				printf("%s %lf %d", list[j].name, list[j].distance, list[j].rating);
+		}
+		break;
+	case 4:
+		for (j = 1; j < size_spot; j++) {
+			if (list[j].theme == 4)
+				printf("%s %lf %d", list[j].name, list[j].distance, list[j].rating);
+		}
+		break;
+
+	}
+}
