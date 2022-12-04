@@ -38,7 +38,7 @@ int main() {
 	return 0;
 }
 
-oid category_area_restaurant(restaurant list[size_restaurant]) {
+void category_area_restaurant(restaurant list[size_restaurant]) {
 	int i, j;
 	printf("1.상당구 2.서원구 3.흥덕구 4.청원구 : ");
 	scanf_s("%d", &i);
