@@ -1,0 +1,103 @@
+#include<stdio.h>
+#define size_restaurant  17 //음식점의 개수
+typedef struct restaurant { // 음식점의 이름, 거리, 별점, 지역, 메뉴의 정보를 담은 구조체
+	char name[20];
+	double distance;
+	int rating;
+	int area;
+	int menu;
+	int ID;
+}restaurant;
+
+void category_area_restaurant(restaurant list[size_restaurant]); // 음식점을 지역(1.상당구 2.서원구 3.창원구 4.청원구)에 따라 분류하는 함수
+void category_menu(restaurant list[size_restaurant]); // 음식점을 메뉴(1.한식 2.분식 3.양식)에 따라 분류하는 함수
+
+int main() {
+	int i;
+	restaurant list_restaurant[size_restaurant];// 음식점 구조체 배열 선언
+	FILE*p2;
+
+	p2 = fopen("data_restaurant.csv", "r"); // 음식점의 정보를 담은 파일을 연다.
+
+	if (p2 == NULL) {
+		printf("파일 읽기 실패!");
+		return -1;
+	}
+
+	for (i = 0; i < size_restaurant; i++) { //파일에 있는 정보들을 구조체 배열에 저장
+		fscanf(p2, "%s %d %d %lf %d %d \n", list_restaurant[i].name, &list_restaurant[i].area, &list_restaurant[i].menu, &list_restaurant[i].distance, &list_restaurant[i].rating, &list_restaurant[i].ID);
+		
+	}
+
+	category_area_restaurant(list_restaurant); //지역에 따라 음식점을 분류하는 함수 실행
+
+	category_menu(list_restaurant); // 메뉴에 따라 음식점을 분류하는 함수 실행
+
+	fclose(p2);
+
+	return 0;
+}
+
+oid category_area_restaurant(restaurant list[size_restaurant]) {
+	int i, j;
+	printf("1.상당구 2.서원구 3.흥덕구 4.청원구 : ");
+	scanf_s("%d", &i);
+
+	switch (i) {
+	case 1:
+		for (j = 1; j < size_restaurant; j++) {
+			if (list[j].area == 1)
+				printf("%s %lf %d", list[j].name, list[j].distance, list[j].rating);
+		}
+		break;
+	case 2:
+		for (j = 1; j < size_restaurant; j++) {
+			if (list[j].area == 2)
+				printf("%s %lf %d", list[j].name, list[j].distance, list[j].rating);
+		}
+		break;
+	case 3:
+		for (j = 1; j < size_restaurant; j++) {
+			if (list[j].area == 3)
+				printf("%s %lf %d", list[j].name, list[j].distance, list[j].rating);
+		}
+		break;
+	case 4:
+		for (j = 1; j < size_restaurant; j++) {
+			if (list[j].area == 4)
+				printf("%s %lf %d", list[j].name, list[j].distance, list[j].rating);
+		}
+		break;
+
+	}
+}
+
+void category_menu(restaurant list[size_restaurant]) {
+	int i, j;
+	printf("1.한식 2.분식 3.양식 : ");
+	scanf_s("%d", &i);
+
+	switch (i) {
+	case 1:
+		for (j = 1; j < size_restaurant; j++) {
+			if (list[j].menu == 1)
+				printf("%s %lf %d", list[j].name, list[j].distance, list[j].rating);
+		}
+		break;
+	case 2:
+		for (j = 1; j < size_restaurant; j++) {
+			if (list[j].menu == 2)
+				printf("%s %lf %d", list[j].name, list[j].distance, list[j].rating);
+		}
+		break;
+	case 3:
+		for (j = 1; j < size_restaurant; j++) {
+			if (list[j].menu == 3)
+				printf("%s %lf %d", list[j].name, list[j].distance, list[j].rating);
+		}
+		break;
+
+	}
+}
+
+
