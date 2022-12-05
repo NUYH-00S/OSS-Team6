@@ -22,7 +22,7 @@ void guide()
 }
 void review_read()
 {
-	char* fileName = "review.txt";
+	char* fileName = "review.csv";
 	FILE* file = fopen(fileName, "a+b");
 	char line[MAX];
 	if (file == NULL)
@@ -38,7 +38,7 @@ void review_read()
 }
 void review_write()
 {
-	char* fileName = "review.txt";
+	char* fileName = "review.csv";
 	FILE* file = fopen(fileName, "a+b");
 	char contents[MAX];
 	if (file == NULL)
