@@ -1,62 +1,114 @@
 #define _CRT_SECURE_NO_WARNINGS
-#include <stdio.h>
-#define MAX 10000
-void guide();
-void review_read();
-void review_write();
-
-int main(void)
+#include<stdio.h>
+#define MAX 1000
+#define size_place 3
+typedef struct place 
 {
-	guide();
-	review_read();
-	review_write();
+	char name[20];
+	char review[1000];
+	int ID;
+}place;
+
+void sort_place(place list[size_place]);
+
+int main() {
+	place list_place[size_place];
+
+	char* fileName = "data_place_review.csv";
+	FILE* file = fopen(fileName, "a+b");
+	if (file == NULL)
+	{
+		printf("파일 열기 실패\n");
+		return 1;
+	}
+
+	int i;
+	for (i = 0; i < size_place; i++)
+	{
+		fscanf(file, "%s %s %d \n", &list_place[i].name, &list_place[i].review, &list_place[i].ID);
+	}
 	
+	sort_place(list_place);
+
+	fclose(file);
+
 	return 0;
 }
 
 
-
-void guide()
-{
-	printf("\n\t여행은 어떠셨나요? 종료하시려면 EXIT을 입력하고 엔터를 치세요. \n\n");
-}
-void review_read()
-{
-	char* fileName = "data_place_review.csv";
-	FILE* file = fopen(fileName, "a+b");
-	char line[MAX];
-	if (file == NULL)
-	{
-		printf("파일 열기 실패\n");
-		return 1;
-	}
-	while (fgets(line, MAX, file) != NULL)
-	{
-		printf("%s", line);
-	}
-	fclose(file);
-}
-void review_write()
-{
+void sort_place(place list[size_place]) {
+	int PlaceNum, j;
 	char* fileName = "data_place_review.csv";
 	FILE* file = fopen(fileName, "a+b");
 	char contents[MAX];
-	if (file == NULL)
-	{
-		printf("파일 열기 실패\n");
-		return 1;
-	}
-	while (1) {
-		scanf("%[^\n]", contents);
-		getchar();
 
-		if (strcmp(contents, "EXIT") == 0)
-		{
-			printf("\n\t리뷰 입력을 종료합니다.\n\n");
-			break;
+	printf("1.국립청주박물관 2.애쁘르팜 3.상당산성 : ");
+	scanf_s("%d", &PlaceNum);
+
+	switch (PlaceNum) {
+	case 1:
+		for (j = 1; j < size_place; j++) {
+			if (list[j].review == 1) {
+				while (fgets(list[j].name, MAX, file) != NULL) {
+					printf("%s %lf %d", &list[j].name, &list[j].review, &list[j].ID);
+				}
+				while (1) {
+					scanf("%[^\n]", contents);
+					getchar();
+
+					if (strcmp(contents, "EXIT") == 0)
+					{
+						printf("\n\t리뷰 입력을 종료합니다.\n\n");
+						break;
+					}
+					fputs(contents, file);
+					fputs("\n", file);
+				}
+			}
 		}
-		fputs(contents, file);
-		fputs("\n", file);
+		break;
+	case 2:
+		for (j = 1; j < size_place; j++) {
+			if (list[j].review == 2) {
+				while (fgets(list[j].name, MAX, file) != NULL) {
+					printf("%s %lf %d", &list[j].name, &list[j].review, &list[j].ID);
+				}
+				while (1) {
+					scanf("%[^\n]", contents);
+					getchar();
+
+					if (strcmp(contents, "EXIT") == 0)
+					{
+						printf("\n\t리뷰 입력을 종료합니다.\n\n");
+						break;
+					}
+					fputs(contents, file);
+					fputs("\n", file);
+				}
+			}
+		}
+		break;
+	case 3:
+		for (j = 1; j < size_place; j++) {
+			if (list[j].review == 3) {
+				while (fgets(list[j].name, MAX, file) != NULL) {
+					printf("%s %lf %d", &list[j].name, &list[j].review, &list[j].ID);
+				}
+				while (1) {
+					scanf("%[^\n]", contents);
+					getchar();
+
+					if (strcmp(contents, "EXIT") == 0)
+					{
+						printf("\n\t리뷰 입력을 종료합니다.\n\n");
+						break;
+					}
+					fputs(contents, file);
+					fputs("\n", file);
+				}
+			}
+		}
+		break;
+
 	}
-	fclose(file);
 }
