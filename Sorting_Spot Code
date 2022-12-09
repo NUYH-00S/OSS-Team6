@@ -1,42 +1,60 @@
 #include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
 #define size_spot 18 //관광지의 개수
-
-typedef struct spot { // 관광지의 이름, 거리, 별점, 지역, 테마의 정보를 담은 구조체
+typedef struct spot { // 관광지의 이름, 거리, 지역, 테마, 정보를 담은 구조체
 	char name[20];
 	double distance;
-	int rating;
 	int area;
 	int theme;
-	int ID;
+	char address_phonenumber[200];
+	char information[300];
 }spot;
 
 void sort_distance_spot(spot list[size_spot]); // 거리에 따른 관광지 정렬 함수
-void sort_rating_spot(spot list[size_spot]); //별점에 따른 관광지 정렬 함수
 void swap_spot(spot* x, spot* y); // 관광지 정렬 하는데 도움을 주는 변환 함수
 
 int main() {
 	int i;
+	char* a1;
+	int b1, c1, d1;
+
 	spot list_spot[size_spot]; //관광지 구조체 배열 선언
 	FILE* p1;
 
+	p1 = fopen("data_spot.csv", "r"); // 관광지를 담은 파일을 연다.
 
-	p1 = fopen("data_spot.csv", "r"); // 관광지의 정보를 담은 파일을 연다.
-	
 	if (p1 == NULL) {
 		printf("파일 읽기 실패!");
 		return -1;
 	}
 
-	for (i = 0; i < size_spot; i++) { //파일에 있는 정보들을 구조체 배열에 저장
-		fscanf(p1, "%s %d %d %lf %d %d \n", list_spot[i].name, &list_spot[i].area, &list_spot[i].theme, &list_spot[i].distance, &list_spot[i].rating, &list_spot[i].ID);
-		
+	char line[1024];
+	for (i = 0; i < size_spot; i++) { // 파일에서 한줄씩 정보를 입력받아 ','로 구분하여 구조체 배열의 각 멤버에 저장하는 반복문
+		fgets(line, 1024, p1);
+		a1 = strtok(line, ",");
+		while (a1 != NULL) {
+			strcpy(list_spot[i].name, a1);
+			a1 = strtok(NULL, ",");
+			b1 = atoi(a1);
+			list_spot[i].area = b1;
+			a1 = strtok(NULL, ",");
+			c1 = atoi(a1);
+			list_spot[i].theme = c1;
+			a1 = strtok(NULL, ",");
+			d1 = atoi(a1);
+			list_spot[i].distance = d1;
+			a1 = strtok(NULL, ",");
+			strcpy(list_spot[i].address_phonenumber, a1);
+			a1 = strtok(NULL, ",");
+			strcpy(list_spot[i].information, a1);
+			a1 = strtok(NULL, ",");
+
+		}
 	}
-	
 
 	sort_distance_spot(list_spot); // 거리에 따른 관광지 정렬함수 실행
-	
-	sort_rating_spot(list_spot); // 별점에 따른 관광지 정렬함수 실행
-	
+
 	fclose(p1);
 
 	return 0;
@@ -44,7 +62,7 @@ int main() {
 
 void sort_distance_spot(spot list[size_spot]) {
 	int i, min, j;
-	
+
 	for (i = 1; i < size_spot; i++) {
 		min = i;
 		for (j = i + 1; j < size_spot; j++) {
@@ -57,34 +75,13 @@ void sort_distance_spot(spot list[size_spot]) {
 	printf("<< 거리순 정렬 >> \n");
 	printf("\n");
 	for (i = 1; i < size_spot; i++) {
-		printf("%s %.1lfkm", list[i].name, list[i].distance);
+		printf("%s \n", list[i].name);
+		printf("거리: %.1lfkm \n", list[i].distance);
+		printf("주소(전화번호): %s \n", list[i].address_phonenumber);
+		printf("정보: %s \n", list[i].information);
 		printf("\n");
-		printf("\n");
+
 	}
-
-}
-
-void sort_rating_spot(spot list[size_spot]) {
-	int i, max, j;
-
-	for (i = 1; i < size_spot; i++) {
-		max = i;
-		for (j = i + 1; j < size_spot; j++) {
-			if (list[j].rating > list[max].rating)
-				max = j;
-		}
-		
-		swap_spot(&list[i], &list[max]);
-	}
-
-	printf("<< 별점순 정렬 >> \n");
-	printf("\n");
-	for (i = 1; i < size_spot; i++) {
-		printf("%s %d점", list[i].name, list[i].rating);
-		printf("\n");
-		printf("\n");
-	}
-
 }
 
 void swap_spot(spot* x, spot* y) {
