@@ -1,12 +1,14 @@
 #include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
 #define size_restaurant  17 //음식점의 개수
-typedef struct restaurant { // 음식점의 이름, 거리, 별점, 지역, 메뉴의 정보를 담은 구조체
+typedef struct restaurant { // 음식점의 이름, 거리, 지역, 메뉴, 주소(전화번호), 정보를 담은 구조체
 	char name[20];
 	double distance;
-	int rating;
 	int area;
 	int menu;
-	int ID;
+	char address_phonenumber[100];
+	char information[200];
 }restaurant;
 
 void category_area_restaurant(restaurant list[size_restaurant]); // 음식점을 지역(1.상당구 2.서원구 3.창원구 4.청원구)에 따라 분류하는 함수
@@ -14,19 +16,41 @@ void category_menu(restaurant list[size_restaurant]); // 음식점을 메뉴(1.�
 
 int main() {
 	int i;
-	restaurant list_restaurant[size_restaurant];// 음식점 구조체 배열 선언
-	FILE*p2;
+	char* a2;
+	int b2, c2, d2;
 
-	p2 = fopen("data_restaurant.csv", "r"); // 음식점의 정보를 담은 파일을 연다.
+	restaurant list_restaurant[size_restaurant];// 음식점 구조체 배열 선언
+	FILE* p2;
+
+	p2 = fopen("data_restaurant.csv", "r"); // 음식점을 담은 파일을 연다.
 
 	if (p2 == NULL) {
 		printf("파일 읽기 실패!");
 		return -1;
 	}
 
-	for (i = 0; i < size_restaurant; i++) { //파일에 있는 정보들을 구조체 배열에 저장
-		fscanf(p2, "%s %d %d %lf %d %d \n", list_restaurant[i].name, &list_restaurant[i].area, &list_restaurant[i].menu, &list_restaurant[i].distance, &list_restaurant[i].rating, &list_restaurant[i].ID);
-		
+	char line[1024];
+	for (i = 0; i < size_restaurant; i++) {
+		fgets(line, 1024, p2);
+		a2 = strtok(line, ",");
+		while (a2 != NULL) {
+			strcpy(list_restaurant[i].name, a2);
+			a2 = strtok(NULL, ",");
+			b2 = atoi(a2);
+			list_restaurant[i].area = b2;
+			a2 = strtok(NULL, ",");
+			c2 = atoi(a2);
+			list_restaurant[i].menu = c2;
+			a2 = strtok(NULL, ",");
+			d2 = atoi(a2);
+			list_restaurant[i].distance = d2;
+			a2 = strtok(NULL, ",");
+			strcpy(list_restaurant[i].address_phonenumber, a2);
+			a2 = strtok(NULL, ",");
+			strcpy(list_restaurant[i].information, a2);
+			a2 = strtok(NULL, ",");
+
+		}
 	}
 
 	category_area_restaurant(list_restaurant); //지역에 따라 음식점을 분류하는 함수 실행
@@ -42,30 +66,58 @@ void category_area_restaurant(restaurant list[size_restaurant]) {
 	int i, j;
 	printf("1.상당구 2.서원구 3.흥덕구 4.청원구 : ");
 	scanf_s("%d", &i);
+	printf("\n");
 
 	switch (i) {
 	case 1:
 		for (j = 1; j < size_restaurant; j++) {
-			if (list[j].area == 1)
-				printf("%s %lf %d", list[j].name, list[j].distance, list[j].rating);
+			if (list[j].area == 1) {
+				printf("%s \n", list[j].name);
+				printf("거리: %.1lfkm \n", list[j].distance);
+				printf("주소(전화번호): %s \n", list[j].address_phonenumber);
+				printf("정보: %s \n", list[j].information);
+				printf("\n");
+
+
+			}
+
+
 		}
 		break;
 	case 2:
 		for (j = 1; j < size_restaurant; j++) {
-			if (list[j].area == 2)
-				printf("%s %lf %d", list[j].name, list[j].distance, list[j].rating);
+			if (list[j].area == 2) {
+				printf("%s \n", list[j].name);
+				printf("거리: %.1lfkm \n", list[j].distance);
+				printf("주소(전화번호): %s \n", list[j].address_phonenumber);
+				printf("정보: %s \n", list[j].information);
+				printf("\n");
+
+			}
 		}
 		break;
 	case 3:
 		for (j = 1; j < size_restaurant; j++) {
-			if (list[j].area == 3)
-				printf("%s %lf %d", list[j].name, list[j].distance, list[j].rating);
+			if (list[j].area == 3) {
+				printf("%s \n", list[j].name);
+				printf("거리: %.1lfkm \n", list[j].distance);
+				printf("주소(전화번호): %s \n", list[j].address_phonenumber);
+				printf("정보: %s \n", list[j].information);
+				printf("\n");
+
+			}
 		}
 		break;
 	case 4:
 		for (j = 1; j < size_restaurant; j++) {
-			if (list[j].area == 4)
-				printf("%s %lf %d", list[j].name, list[j].distance, list[j].rating);
+			if (list[j].area == 4) {
+				printf("%s \n", list[j].name);
+				printf("거리: %.1lfkm \n", list[j].distance);
+				printf("주소(전화번호): %s \n", list[j].address_phonenumber);
+				printf("정보: %s \n", list[j].information);
+				printf("\n");
+
+			}
 		}
 		break;
 
@@ -76,28 +128,45 @@ void category_menu(restaurant list[size_restaurant]) {
 	int i, j;
 	printf("1.한식 2.분식 3.양식 : ");
 	scanf_s("%d", &i);
+	printf("\n");
 
 	switch (i) {
 	case 1:
 		for (j = 1; j < size_restaurant; j++) {
-			if (list[j].menu == 1)
-				printf("%s %lf %d", list[j].name, list[j].distance, list[j].rating);
+			if (list[j].menu == 1) {
+				printf("%s \n", list[j].name);
+				printf("거리: %.1lfkm \n", list[j].distance);
+				printf("주소(전화번호): %s \n", list[j].address_phonenumber);
+				printf("정보: %s \n", list[j].information);
+				printf("\n");
+
+			}
 		}
 		break;
 	case 2:
 		for (j = 1; j < size_restaurant; j++) {
-			if (list[j].menu == 2)
-				printf("%s %lf %d", list[j].name, list[j].distance, list[j].rating);
+			if (list[j].menu == 2) {
+				printf("%s \n", list[j].name);
+				printf("거리: %.1lfkm \n", list[j].distance);
+				printf("주소(전화번호): %s \n", list[j].address_phonenumber);
+				printf("정보: %s \n", list[j].information);
+				printf("\n");
+
+			}
 		}
 		break;
 	case 3:
 		for (j = 1; j < size_restaurant; j++) {
-			if (list[j].menu == 3)
-				printf("%s %lf %d", list[j].name, list[j].distance, list[j].rating);
+			if (list[j].menu == 3) {
+				printf("%s \n", list[j].name);
+				printf("거리: %.1lfkm \n", list[j].distance);
+				printf("주소(전화번호): %s \n", list[j].address_phonenumber);
+				printf("정보: %s \n", list[j].information);
+				printf("\n");
+
+			}
 		}
 		break;
 
 	}
 }
-
-
