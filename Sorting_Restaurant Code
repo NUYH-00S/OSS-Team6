@@ -1,38 +1,59 @@
 #include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
 #define size_restaurant  17 //음식점의 개수
-typedef struct restaurant { // 음식점의 이름, 거리, 별점, 지역, 메뉴의 정보를 담은 구조체
+typedef struct restaurant { // 음식점의 이름, 거리, 지역, 메뉴, 주소(전화번호), 정보를 담은 구조체
 	char name[20];
 	double distance;
-	int rating;
 	int area;
 	int menu;
-	int ID;
+	char address_phonenumber[100];
+	char information[200];
 }restaurant;
 
 void sort_distance_restaurant(restaurant list[size_restaurant]); // 거리에 따른 음식점 정렬 함수
-void sort_rating_restaurant(restaurant list[size_restaurant]); //별점에 따른 음식점 정렬 함수
 void swap_restaurant(restaurant* x, restaurant* y); //음식점 정렬 하는데 도움을 주는 변환 함수
 
 int main() {
 	int i;
-	restaurant list_restaurant[size_restaurant];// 음식점 구조체 배열 선언
-	FILE*p2;
+	char* a2;
+	int b2, c2, d2;
 
-	p2 = fopen("data_restaurant.csv", "r"); // 음식점의 정보를 담은 파일을 연다.
+	restaurant list_restaurant[size_restaurant];// 음식점 구조체 배열 선언
+	FILE* p2;
+
+	p2 = fopen("data_restaurant.csv", "r"); // 음식점을 담은 파일을 연다.
 
 	if (p2 == NULL) {
 		printf("파일 읽기 실패!");
 		return -1;
 	}
 
-	for (i = 0; i < size_restaurant; i++) { //파일에 있는 정보들을 구조체 배열에 저장
-		fscanf(p2, "%s %d %d %lf %d %d \n", list_restaurant[i].name, &list_restaurant[i].area, &list_restaurant[i].menu, &list_restaurant[i].distance, &list_restaurant[i].rating, &list_restaurant[i].ID);
-		
+	char line[1024];
+	for (i = 0; i < size_restaurant; i++) {
+		fgets(line, 1024, p2);
+		a2 = strtok(line, ",");
+		while (a2 != NULL) {
+			strcpy(list_restaurant[i].name, a2);
+			a2 = strtok(NULL, ",");
+			b2 = atoi(a2);
+			list_restaurant[i].area = b2;
+			a2 = strtok(NULL, ",");
+			c2 = atoi(a2);
+			list_restaurant[i].menu = c2;
+			a2 = strtok(NULL, ",");
+			d2 = atoi(a2);
+			list_restaurant[i].distance = d2;
+			a2 = strtok(NULL, ",");
+			strcpy(list_restaurant[i].address_phonenumber, a2);
+			a2 = strtok(NULL, ",");
+			strcpy(list_restaurant[i].information, a2);
+			a2 = strtok(NULL, ",");
+
+		}
 	}
 
 	sort_distance_restaurant(list_restaurant); //거리에 따른 음식점 정렬함수 실행
-
-	sort_rating_restaurant(list_restaurant); // 별점에 따른 음식점 정렬함수 실행
 
 	fclose(p2);
 
@@ -54,32 +75,12 @@ void sort_distance_restaurant(restaurant list[size_restaurant]) {
 	printf("<< 거리순 정렬 >> \n");
 	printf("\n");
 	for (i = 1; i < size_restaurant; i++) {
-		printf("%s %.1lfkm", list[i].name, list[i].distance);
+		printf("%s \n", list[i].name);
+		printf("거리: %.1lfkm \n", list[i].distance);
+		printf("주소(전화번호): %s \n", list[i].address_phonenumber);
+		printf("정보: %s \n", list[i].information);
 		printf("\n");
-		printf("\n");
-	}
 
-}
-
-void sort_rating_restaurant(restaurant list[size_restaurant]) {
-	int i, max, j;
-
-	for (i = 1; i < size_restaurant; i++) {
-		max = i;
-		for (j = i + 1; j < size_restaurant; j++) {
-			if (list[j].rating > list[max].rating)
-				max = j;
-		}
-
-		swap_restaurant(&list[i], &list[max]);
-	}
-
-	printf("<< 별점순 정렬 >> \n");
-	printf("\n");
-	for (i = 1; i < size_restaurant; i++) {
-		printf("%s %d점", list[i].name, list[i].rating);
-		printf("\n");
-		printf("\n");
 	}
 
 }
@@ -91,4 +92,3 @@ void swap_restaurant(restaurant* x, restaurant* y) {
 	*x = *y;
 	*y = temp;
 }
-
