@@ -31,8 +31,8 @@ int main() {
 
 	char line2[1024];
 	for (i = 0; i < size_restaurant; i++) {
-		fgets(line, 1024, p2);
-		a2 = strtok(line, ",");
+		fgets(line2, 1024, p2);
+		a2 = strtok(line2, ",");
 		while (a2 != NULL) {
 			strcpy(list_restaurant[i].name, a2);
 			a2 = strtok(NULL, ",");
