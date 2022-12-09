@@ -29,7 +29,7 @@ int main() {
 		return -1;
 	}
 
-	char line[1024];
+	char line1[1024];
 	for (i = 0; i < size_spot; i++) { // 파일에서 한줄씩 정보를 입력받아 ','로 구분하여 구조체 배열의 각 멤버에 저장하는 반복문
 		fgets(line, 1024, p1);
 		a1 = strtok(line, ",");
