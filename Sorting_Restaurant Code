@@ -29,7 +29,7 @@ int main() {
 		return -1;
 	}
 
-	char line[1024];
+	char line2[1024];
 	for (i = 0; i < size_restaurant; i++) {
 		fgets(line, 1024, p2);
 		a2 = strtok(line, ",");
