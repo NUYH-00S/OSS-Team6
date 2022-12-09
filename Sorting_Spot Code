@@ -2,7 +2,7 @@
 #include<stdlib.h>
 #include<string.h>
 #define size_spot 18 //관광지의 개수
-typedef struct spot { // 관광지의 이름, 거리, 지역, 테마, 정보를 담은 구조체
+typedef struct spot { // 관광지의 이름, 거리, 지역, 테마, 주소(전화번호), 정보를 담은 구조체
 	char name[20];
 	double distance;
 	int area;
