@@ -20,14 +20,14 @@ int main() {
 }
 
 
-void search_place(place list[size_place]) 
+void search_place(place list[size_place])
 {
     place list_place[size_place];
 
     int i, j;
     char* ptr;
     char line[MAX];
-    
+
     int PlaceNum;
     char contents[MAX];
 
@@ -49,17 +49,17 @@ void search_place(place list[size_place])
             strcpy(list_place[i].review, ptr);
             ptr = strtok(NULL, ",");
         }
-    }    
+    }
 
     printf("기행문을 남길 장소를 선택하세요.\n1.국립청주박물관 2.애쁘르팜 3.상당산성 : ");
     scanf_s("%d", &PlaceNum);
 
-    switch (PlaceNum) 
+    switch (PlaceNum)
     {
         printf("EXIT을 입력하면 종료합니다.\N");
     case 1: {
         int j = 1;
-        
+
         printf("%s: %s", list[j].name, list[j].review);
         while (1) {
             scanf("%[^\n]", contents);
@@ -108,5 +108,6 @@ void search_place(place list[size_place])
         }
         break;
     }
-    fclose(file);
+          fclose(file);
+    }
 }
