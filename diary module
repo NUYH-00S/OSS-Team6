@@ -1,11 +1,12 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
-#define MAX 1000
-#define size_place 3
+#include <stdlib.h>
+#include <string.h>
+#define MAX 512
+#define size_place 33
 typedef struct place {
-    char name[20];
-    int star;
-    char review[100];    
+    char name[32];
+    char review[512];
 } place;
 
 void search_place(place list[size_place]);
@@ -13,51 +14,53 @@ void search_place(place list[size_place]);
 int main() {
     place list_place[size_place];
 
-    char* fileName = "data_place_review.csv";
-    FILE* file = fopen(fileName, "a+b");
-    char line[MAX];
+    search_place(list_place);  
 
+    return 0;
+}
+
+
+void search_place(place list[size_place]) 
+{
+    place list_place[size_place];
+
+    int i, j;
+    char* ptr;
+    char line[MAX];
+    
+    int PlaceNum;
+    char contents[MAX];
+
+    char* fileName = "data_review.csv";
+    FILE* file = fopen(fileName, "a+b");
 
     if (file == NULL) {
         printf("파일 열기 실패\n");
         return 1;
     }
 
-    int i;
-    while (fgets(line, MAX, file) != NULL)
+    for (i = 0; i < size_place; i++)
     {
-        printf("%s", line);
-        char* ptr = strtok(line, ",");
-        while (ptr != NULL)
-        {
+        fgets(line, 1024, file);
+        ptr = strtok(line, ",");
+        while (ptr != NULL) {
+            strcpy(list_place[i].name, ptr);
+            ptr = strtok(NULL, ",");
+            strcpy(list_place[i].review, ptr);
             ptr = strtok(NULL, ",");
         }
+    }    
 
-    }
-
-    for (i = 0; i <= size_place; i++) {
-        fscanf(file, "%s %d %s", list_place[i].name, &list_place[i].star , &list_place[i].review);
-    }
-
-    search_place(list_place);
-
-    fclose(file);
-
-    return 0;
-}
-
-void search_place(place list[size_place]) {
-    int PlaceNum;
-    char* fileName = "data_place_review.csv";
-    FILE* file = fopen(fileName, "a+b");
-    char contents[MAX];
-
-    printf("1.국립청주박물관 2.애쁘르팜 3.상당산성 : ");
+    printf("기행문을 남길 장소를 선택하세요.\n1.국립청주박물관 2.애쁘르팜 3.상당산성 : ");
     scanf_s("%d", &PlaceNum);
 
-    switch (PlaceNum) {
-    case 1:{
-        printf("%s %d %s", &list[1].name, &list[1].star, &list[1].review);
+    switch (PlaceNum) 
+    {
+        printf("EXIT을 입력하면 종료합니다.\N");
+    case 1: {
+        int j = 1;
+        
+        printf("%s: %s", list[j].name, list[j].review);
         while (1) {
             scanf("%[^\n]", contents);
             getchar();
@@ -72,7 +75,9 @@ void search_place(place list[size_place]) {
         break;
     }
     case 2: {
-        printf("%s %d %s", &list[2].name, &list[2].star, &list[2].review);
+        int j = 2;
+
+        printf("%s: %s", list[j].name, list[j].review);
         while (1) {
             scanf("%[^\n]", contents);
             getchar();
@@ -87,7 +92,9 @@ void search_place(place list[size_place]) {
         break;
     }
     case 3: {
-        printf("%s %d %s", &list[3].name, &list[3].star, &list[3].review);
+        int j = 3;
+
+        printf("%s: %s", list[j].name, list[j].review);
         while (1) {
             scanf("%[^\n]", contents);
             getchar();
@@ -101,5 +108,5 @@ void search_place(place list[size_place]) {
         }
         break;
     }
-    }
+    fclose(file);
 }
