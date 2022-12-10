@@ -72,7 +72,7 @@ void search_place(place list[size_place])
 			}
 			strcpy(list_place[j].review, review_contents);
 		}
-		
+
 		for (i = 0; i < size_place; i++)
 		{
 			fputs(list_place[i].name, file);
@@ -80,6 +80,7 @@ void search_place(place list[size_place])
 			fputs(list_place[i].review, file);
 			fputs(",", file);
 		}
+		
 		fclose(file);
 		break;
 	}
