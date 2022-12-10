@@ -3,13 +3,23 @@
 #include <stdlib.h>
 #include <string.h>
 #define MAX 512
-#define size_place 2
+#define size_place 34
 typedef struct place {
 	char name[32];
 	char review[512];
 } place;
 
 void search_place(place list[size_place]);
+void RemoveEnd(char* buf)
+{
+	int i = 0;
+	while (buf[i])//buf[i]가 참(널문자가 아님)이면 반복하여라.
+	{
+		i++;
+	}
+	//현재 i는 널문자가 있는 위치, i-1은 마지막 문자 위치
+	buf[i - 1] = '\0';
+}
 
 int main() {
 	place list_place[size_place];
@@ -56,7 +66,8 @@ void search_place(place list[size_place])
 	switch (PlaceNum)
 	{
 		printf("EXIT을 입력하면 종료합니다.\N");
-	case 1: {
+	case 1:
+	{
 		int j = 1;
 
 		printf("%s: %s", list_place[j].name, list_place[j].review);
@@ -71,23 +82,17 @@ void search_place(place list[size_place])
 			}
 			strcpy(list_place[j].review, review_contents);
 		}
-
-
 		char name1[32];
 		char review1[MAX];
-
 		for (i = 0; i < size_place; i++)
 		{
-			strcpy(name1, list_place[i].name);
-			strcpy(review1, list_place[i].review);
-			fputs(name1, file);
+			fputs(list_place[i].name, file);
 			fputs(",", file);
-			fputs(review1, file);
+			fputs(list_place[i].review, file);
 			fputs(",", file);
 		}
-
+		fclose(file);
 		break;
 	}
-		  fclose(file);
 	}
 }
