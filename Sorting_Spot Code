@@ -17,7 +17,8 @@ void swap_spot(spot* x, spot* y); // 관광지 정렬 하는데 도움을 주는
 int main() {
 	int i;
 	char* a1;
-	int b1, c1, d1;
+	int b1, c1;
+	double d1;
 
 	spot list_spot[size_spot]; //관광지 구조체 배열 선언
 	FILE* p1;
@@ -42,7 +43,7 @@ int main() {
 			c1 = atoi(a1);
 			list_spot[i].theme = c1;
 			a1 = strtok(NULL, ",");
-			d1 = atoi(a1);
+			d1 = atof(a1);
 			list_spot[i].distance = d1;
 			a1 = strtok(NULL, ",");
 			strcpy(list_spot[i].address_phonenumber, a1);
