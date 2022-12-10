@@ -3,111 +3,91 @@
 #include <stdlib.h>
 #include <string.h>
 #define MAX 512
-#define size_place 33
+#define size_place 2
 typedef struct place {
-    char name[32];
-    char review[512];
+	char name[32];
+	char review[512];
 } place;
 
 void search_place(place list[size_place]);
 
 int main() {
-    place list_place[size_place];
+	place list_place[size_place];
 
-    search_place(list_place);  
+	search_place(list_place);
 
-    return 0;
+	return 0;
 }
 
 
 void search_place(place list[size_place])
 {
-    place list_place[size_place];
+	place list_place[size_place];
 
-    int i, j;
-    char* ptr;
-    char line[MAX];
+	int i, j;
+	char* ptr;
+	char line[MAX];
 
-    int PlaceNum;
-    char contents[MAX];
+	int PlaceNum;
+	char review_contents[MAX];
 
-    char* fileName = "data_review.csv";
-    FILE* file = fopen(fileName, "a+b");
+	char* fileName = "data_review.csv";
+	FILE* file = fopen(fileName, "a+b");
+	if (file == NULL) {
+		printf("파일 열기 실패\n");
+		return 1;
+	}
 
-    if (file == NULL) {
-        printf("파일 열기 실패\n");
-        return 1;
-    }
+	for (i = 0; i < size_place; i++)
+	{
+		fgets(line, MAX, file);
+		ptr = strtok(line, ",");
+		while (ptr != NULL) {
+			strcpy(list_place[i].name, ptr);
+			ptr = strtok(NULL, ",");
+			strcpy(list_place[i].review, ptr);
+			ptr = strtok(NULL, ",");
+		}
+	}
 
-    for (i = 0; i < size_place; i++)
-    {
-        fgets(line, 1024, file);
-        ptr = strtok(line, ",");
-        while (ptr != NULL) {
-            strcpy(list_place[i].name, ptr);
-            ptr = strtok(NULL, ",");
-            strcpy(list_place[i].review, ptr);
-            ptr = strtok(NULL, ",");
-        }
-    }
 
-    printf("기행문을 남길 장소를 선택하세요.\n1.국립청주박물관 2.애쁘르팜 3.상당산성 : ");
-    scanf_s("%d", &PlaceNum);
+	printf("기행문을 남길 장소를 선택하세요.\n1.국립청주박물관 2.애쁘르팜 3.상당산성 : ");
+	scanf_s("%d", &PlaceNum);
+	switch (PlaceNum)
+	{
+		printf("EXIT을 입력하면 종료합니다.\N");
+	case 1: {
+		int j = 1;
 
-    switch (PlaceNum)
-    {
-        printf("EXIT을 입력하면 종료합니다.\N");
-    case 1: {
-        int j = 1;
+		printf("%s: %s", list_place[j].name, list_place[j].review);
+		while (1)
+		{
+			scanf("%[^\n]", review_contents);
+			getchar();
 
-        printf("%s: %s", list[j].name, list[j].review);
-        while (1) {
-            scanf("%[^\n]", contents);
-            getchar();
+			if (strcmp(review_contents, "EXIT") == 0) {
+				printf("\n\t리뷰 입력을 종료합니다.\n\n");
+				break;
+			}
+			strcpy(list_place[j].review, review_contents);
+		}
 
-            if (strcmp(contents, "EXIT") == 0) {
-                printf("\n\t리뷰 입력을 종료합니다.\n\n");
-                break;
-            }
-            fputs(contents, file);
-            fputs("\n", file);
-        }
-        break;
-    }
-    case 2: {
-        int j = 2;
 
-        printf("%s: %s", list[j].name, list[j].review);
-        while (1) {
-            scanf("%[^\n]", contents);
-            getchar();
+		char name1[32];
+		char review1[MAX];
 
-            if (strcmp(contents, "EXIT") == 0) {
-                printf("\n\t리뷰 입력을 종료합니다.\n\n");
-                break;
-            }
-            fputs(contents, file);
-            fputs("\n", file);
-        }
-        break;
-    }
-    case 3: {
-        int j = 3;
+		for (i = 0; i < size_place; i++)
+		{
+			strcpy(name1, list_place[i].name);
+			strcpy(review1, list_place[i].review);
+			fputs(name1, file);
+			fputs(",", file);
+			fputs(review1, file);
+			fputs(",", file);
+		}
 
-        printf("%s: %s", list[j].name, list[j].review);
-        while (1) {
-            scanf("%[^\n]", contents);
-            getchar();
-
-            if (strcmp(contents, "EXIT") == 0) {
-                printf("\n\t리뷰 입력을 종료합니다.\n\n");
-                break;
-            }
-            fputs(contents, file);
-            fputs("\n", file);
-        }
-        break;
-    }
-          fclose(file);
-    }
+		break;
+	}
+		  fclose(file);
+	}
 }
