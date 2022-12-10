@@ -17,7 +17,8 @@ void swap_restaurant(restaurant* x, restaurant* y); //음식점 정렬 하는데
 int main() {
 	int i;
 	char* a2;
-	int b2, c2, d2;
+	int b2, c2;
+	double d2;
 
 	restaurant list_restaurant[size_restaurant];// 음식점 구조체 배열 선언
 	FILE* p2;
@@ -42,7 +43,7 @@ int main() {
 			c2 = atoi(a2);
 			list_restaurant[i].menu = c2;
 			a2 = strtok(NULL, ",");
-			d2 = atoi(a2);
+			d2 = atof(a2);
 			list_restaurant[i].distance = d2;
 			a2 = strtok(NULL, ",");
 			strcpy(list_restaurant[i].address_phonenumber, a2);
