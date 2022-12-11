@@ -1,18 +1,20 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
-#define size_spot 18 //관광지의 개수
+#define size_spot 17 //관광지의 개수
 typedef struct spot { // 관광지의 이름, 거리, 지역, 테마, 주소(전화번호), 정보를 담은 구조체
 	char name[20];
-	double distance;
-	int area;
+	float distance;
+	int region;
 	int theme;
 	char address_phonenumber[200];
 	char information[300];
-}spot;
+}SPOT;
 
-void sort_distance_spot(spot list[size_spot]); // 거리에 따른 관광지 정렬 함수
-void swap_spot(spot* x, spot* y); // 관광지 정렬 하는데 도움을 주는 변환 함수
+void sort_distance_spot(SPOT list[size_spot]); // 거리에 따른 관광지 정렬 함수
+void swap_spot(SPOT* x, SPOT* y); // 관광지 정렬 하는데 도움을 주는 변환 함수
+const char* theme(int n);
+const char* region(int n);
 
 int main() {
 	int i;
@@ -20,7 +22,7 @@ int main() {
 	int b1, c1;
 	double d1;
 
-	spot list_spot[size_spot]; //관광지 구조체 배열 선언
+	SPOT list_spot[size_spot]; //관광지 구조체 배열 선언
 	FILE* p1;
 
 	p1 = fopen("data_spot.csv", "r"); // 관광지를 담은 파일을 연다.
@@ -38,7 +40,7 @@ int main() {
 			strcpy(list_spot[i].name, a1);
 			a1 = strtok(NULL, ",");
 			b1 = atoi(a1);
-			list_spot[i].area = b1;
+			list_spot[i].region = b1;
 			a1 = strtok(NULL, ",");
 			c1 = atoi(a1);
 			list_spot[i].theme = c1;
@@ -61,10 +63,10 @@ int main() {
 	return 0;
 }
 
-void sort_distance_spot(spot list[size_spot]) {
+void sort_distance_spot(SPOT list[size_spot]) {
 	int i, min, j;
 
-	for (i = 1; i < size_spot; i++) {
+	for (i = 0; i < size_spot; i++) {
 		min = i;
 		for (j = i + 1; j < size_spot; j++) {
 			if (list[j].distance < list[min].distance)
@@ -73,22 +75,45 @@ void sort_distance_spot(spot list[size_spot]) {
 		swap_spot(&list[i], &list[min]);
 	}
 
-	printf("<< 거리순 정렬 >> \n");
-	printf("\n");
-	for (i = 1; i < size_spot; i++) {
-		printf("%s \n", list[i].name);
-		printf("거리: %.1lfkm \n", list[i].distance);
-		printf("주소(전화번호): %s \n", list[i].address_phonenumber);
-		printf("정보: %s \n", list[i].information);
-		printf("\n");
-
+	printf("  =========================================================================\n");
+	printf("       이름                        지역             테마            거리\n");
+	printf("  =========================================================================\n\n");
+	
+	for (i = 0; i < size_spot; i++) {
+		printf("   %02d. %-18s\t%8s\t%11s\t%6.1f km\n\n", i + 1, list[i].name, region(list[i].region), theme(list[i].theme), list[i].distance);
+		
 	}
+	printf("  ==================================================================\n\n");
 }
 
-void swap_spot(spot* x, spot* y) {
-	spot temp;
+void swap_spot(SPOT* x, SPOT* y) {
+	SPOT temp;
 
 	temp = *x;
 	*x = *y;
 	*y = temp;
+}
+
+const char* region(int n)
+{
+	if (n == 1)
+		return "상당구";
+	else if (n == 2)
+		return "서원구";
+	else if (n == 3)
+		return "흥덕구";
+	else
+		return "청원구";
+}
+
+const char* theme(int n)
+{
+	if (n == 1)
+		return "교육체험관광";
+	else if (n == 2)
+		return "농촌체험관광";
+	else if (n == 3)
+		return "역사문화관광";
+	else
+		return "생태자연관광";
 }
