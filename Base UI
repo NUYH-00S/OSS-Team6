@@ -41,6 +41,15 @@ const char* theme(int n);
 const char* menu(int n);
 void print_spotlist(SPOT* list_spot);
 void print_restaurantlist(RESTAURANT* list_restaurant);
+void sort_distance_restaurant(restaurant list[size_restaurant]); // 거리에 따른 음식점 정렬 함수
+void swap_restaurant(restaurant* x, restaurant* y); //음식점 정렬 하는데 도움을 주는 변환 함수
+void category_area_restaurant(restaurant list[size_restaurant]); // 음식점을 지역(1.상당구 2.서원구 3.창원구 4.청원구)에 따라 분류하는 함수
+void category_menu(restaurant list[size_restaurant]); // 음식점을 메뉴(1.한식 2.분식 3.양식)에 따라 분류하는 함수
+void sort_distance_spot(spot list[size_spot]); // 거리에 따른 관광지 정렬 함수
+void swap_spot(spot* x, spot* y); // 관광지 정렬 하는데 도움을 주는 변환 함수
+void category_area_spot(spot list[size_spot]); // 관광지를 지역(1.상당구 2.서원구 3.창원구 4.청원구)에 따라 분류하는 함수
+void category_theme(spot list[size_spot]); // 관광지를 테마(1.교육체험관광 2.농촌체험관광 3.역사문화관광 4.생태자연관광)에 따라 분류하는 함수
+
 
 int main()
 {
@@ -226,10 +235,19 @@ void run(int x, int y)
 	else if (x == 22 && y == 16) // 2. 정렬
 	{
 		menu_display();
+		gotoxy(1, 19);
+		sort_distance_restaurant(list_restaurant); //거리에 따른 음식점 정렬함수 실행
+		sort_distance_spot(list_spot); // 거리에 따른 관광지 정렬함수 실행
+
 	}
 	else if (x == 42 && y == 16) // 3. 카테고리
 	{
 		menu_display();
+		gotoxy(1, 19);
+		category_area_restaurant(list_restaurant); //지역에 따라 음식점을 분류하는 함수 실행
+		category_menu(list_restaurant); // 메뉴에 따라 음식점을 분류하는 함수 실행
+		category_area_spot(list_spot); // 지역에 따라 관광지를 분류하는 함수 실행
+		category_theme(list_spot); // 테마에 따라 관광지를 분류하는 함수 실행
 	}
 	else // 4. 상세정보
 	{
@@ -297,4 +315,295 @@ void print_restaurantlist(RESTAURANT* list_restaurant)
 		printf("   %02d. %-20s %8s\t%8s\t%6.1f km\n\n", i + 1, list_restaurant[i].name, region(list_restaurant[i].region), menu(list_restaurant[i].menu), list_restaurant[i].distance);
 	printf("  ==================================================================\n");
 	return 0;
+}
+
+void sort_distance_restaurant(restaurant list[size_restaurant]) {
+	int i, min, j;
+
+	for (i = 1; i < size_restaurant; i++) {
+		min = i;
+		for (j = i + 1; j < size_restaurant; j++) {
+			if (list[j].distance < list[min].distance)
+				min = j;
+		}
+		swap_restaurant(&list[i], &list[min]);
+	}
+
+	printf("<< 거리순 정렬 >> \n");
+	printf("\n");
+	for (i = 1; i < size_restaurant; i++) {
+		printf("%s \n", list[i].name);
+		printf("거리: %.1lfkm \n", list[i].distance);
+		printf("주소(전화번호): %s \n", list[i].address_phonenumber);
+		printf("정보: %s \n", list[i].information);
+		printf("\n");
+
+	}
+
+}
+
+void swap_restaurant(restaurant* x, restaurant* y) {
+	restaurant temp;
+
+	temp = *x;
+	*x = *y;
+	*y = temp;
+}
+
+void category_area_restaurant(restaurant list[size_restaurant]) {
+	int i, j;
+	printf("1.상당구 2.서원구 3.흥덕구 4.청원구 : ");
+	scanf_s("%d", &i);
+	printf("\n");
+
+	switch (i) {
+	case 1:
+		for (j = 1; j < size_restaurant; j++) {
+			if (list[j].area == 1) {
+				printf("%s \n", list[j].name);
+				printf("거리: %.1lfkm \n", list[j].distance);
+				printf("주소(전화번호): %s \n", list[j].address_phonenumber);
+				printf("정보: %s \n", list[j].information);
+				printf("\n");
+
+
+			}
+
+
+		}
+		break;
+	case 2:
+		for (j = 1; j < size_restaurant; j++) {
+			if (list[j].area == 2) {
+				printf("%s \n", list[j].name);
+				printf("거리: %.1lfkm \n", list[j].distance);
+				printf("주소(전화번호): %s \n", list[j].address_phonenumber);
+				printf("정보: %s \n", list[j].information);
+				printf("\n");
+
+			}
+		}
+		break;
+	case 3:
+		for (j = 1; j < size_restaurant; j++) {
+			if (list[j].area == 3) {
+				printf("%s \n", list[j].name);
+				printf("거리: %.1lfkm \n", list[j].distance);
+				printf("주소(전화번호): %s \n", list[j].address_phonenumber);
+				printf("정보: %s \n", list[j].information);
+				printf("\n");
+
+			}
+		}
+		break;
+	case 4:
+		for (j = 1; j < size_restaurant; j++) {
+			if (list[j].area == 4) {
+				printf("%s \n", list[j].name);
+				printf("거리: %.1lfkm \n", list[j].distance);
+				printf("주소(전화번호): %s \n", list[j].address_phonenumber);
+				printf("정보: %s \n", list[j].information);
+				printf("\n");
+
+			}
+		}
+		break;
+
+	}
+}
+
+void category_menu(restaurant list[size_restaurant]) {
+	int i, j;
+	printf("1.한식 2.분식 3.양식 : ");
+	scanf_s("%d", &i);
+	printf("\n");
+
+	switch (i) {
+	case 1:
+		for (j = 1; j < size_restaurant; j++) {
+			if (list[j].menu == 1) {
+				printf("%s \n", list[j].name);
+				printf("거리: %.1lfkm \n", list[j].distance);
+				printf("주소(전화번호): %s \n", list[j].address_phonenumber);
+				printf("정보: %s \n", list[j].information);
+				printf("\n");
+
+			}
+		}
+		break;
+	case 2:
+		for (j = 1; j < size_restaurant; j++) {
+			if (list[j].menu == 2) {
+				printf("%s \n", list[j].name);
+				printf("거리: %.1lfkm \n", list[j].distance);
+				printf("주소(전화번호): %s \n", list[j].address_phonenumber);
+				printf("정보: %s \n", list[j].information);
+				printf("\n");
+
+			}
+		}
+		break;
+	case 3:
+		for (j = 1; j < size_restaurant; j++) {
+			if (list[j].menu == 3) {
+				printf("%s \n", list[j].name);
+				printf("거리: %.1lfkm \n", list[j].distance);
+				printf("주소(전화번호): %s \n", list[j].address_phonenumber);
+				printf("정보: %s \n", list[j].information);
+				printf("\n");
+
+			}
+		}
+		break;
+
+	}
+}
+
+void sort_distance_spot(spot list[size_spot]) {
+	int i, min, j;
+
+	for (i = 1; i < size_spot; i++) {
+		min = i;
+		for (j = i + 1; j < size_spot; j++) {
+			if (list[j].distance < list[min].distance)
+				min = j;
+		}
+		swap_spot(&list[i], &list[min]);
+	}
+
+	printf("<< 거리순 정렬 >> \n");
+	printf("\n");
+	for (i = 1; i < size_spot; i++) {
+		printf("%s \n", list[i].name);
+		printf("거리: %.1lfkm \n", list[i].distance);
+		printf("주소(전화번호): %s \n", list[i].address_phonenumber);
+		printf("정보: %s \n", list[i].information);
+		printf("\n");
+
+	}
+}
+
+void swap_spot(spot* x, spot* y) {
+	spot temp;
+
+	temp = *x;
+	*x = *y;
+	*y = temp;
+}
+
+void category_area_spot(spot list[size_spot]) {
+	int i, j;
+	printf("1.상당구 2.서원구 3.흥덕구 4.청원구 : ");
+	scanf_s("%d", &i);
+
+	switch (i) {
+	case 1:
+		for (j = 1; j < size_spot; j++) {
+			if (list[j].area == 1) {
+				printf("%s \n", list[j].name);
+				printf("거리: %.1lfkm \n", list[j].distance);
+				printf("주소(전화번호): %s \n", list[j].address_phonenumber);
+				printf("정보: %s \n", list[j].information);
+				printf("\n");
+
+
+			}
+		}
+		break;
+	case 2:
+		for (j = 1; j < size_spot; j++) {
+			if (list[j].area == 2) {
+				printf("%s \n", list[j].name);
+				printf("거리: %.1lfkm \n", list[j].distance);
+				printf("주소(전화번호): %s \n", list[j].address_phonenumber);
+				printf("정보: %s \n", list[j].information);
+				printf("\n");
+
+			}
+		}
+		break;
+	case 3:
+		for (j = 1; j < size_spot; j++) {
+			if (list[j].area == 3) {
+				printf("%s \n", list[j].name);
+				printf("거리: %.1lfkm \n", list[j].distance);
+				printf("주소(전화번호): %s \n", list[j].address_phonenumber);
+				printf("정보: %s \n", list[j].information);
+				printf("\n");
+
+			}
+		}
+		break;
+	case 4:
+		for (j = 1; j < size_spot; j++) {
+			if (list[j].area == 4) {
+				printf("%s \n", list[j].name);
+				printf("거리: %.1lfkm \n", list[j].distance);
+				printf("주소(전화번호): %s \n", list[j].address_phonenumber);
+				printf("정보: %s \n", list[j].information);
+				printf("\n");
+
+			}
+		}
+		break;
+
+	}
+}
+
+void category_theme(spot list[size_spot]) {
+	int i, j;
+	printf("1.교육체험관광 2.농촌체험관광 3.역사문화관광 4.생태자연관광 : ");
+	scanf_s("%d", &i);
+
+	switch (i) {
+	case 1:
+		for (j = 1; j < size_spot; j++) {
+			if (list[j].theme == 1) {
+				printf("%s \n", list[j].name);
+				printf("거리: %.1lfkm \n", list[j].distance);
+				printf("주소(전화번호): %s \n", list[j].address_phonenumber);
+				printf("정보: %s \n", list[j].information);
+				printf("\n");
+
+			}
+		}
+		break;
+	case 2:
+		for (j = 1; j < size_spot; j++) {
+			if (list[j].theme == 2) {
+				printf("%s \n", list[j].name);
+				printf("거리: %.1lfkm \n", list[j].distance);
+				printf("주소(전화번호): %s \n", list[j].address_phonenumber);
+				printf("정보: %s \n", list[j].information);
+				printf("\n");
+
+			}
+		}
+		break;
+	case 3:
+		for (j = 1; j < size_spot; j++) {
+			if (list[j].theme == 3) {
+				printf("%s \n", list[j].name);
+				printf("거리: %.1lfkm \n", list[j].distance);
+				printf("주소(전화번호): %s \n", list[j].address_phonenumber);
+				printf("정보: %s \n", list[j].information);
+				printf("\n");
+
+			}
+		}
+		break;
+	case 4:
+		for (j = 1; j < size_spot; j++) {
+			if (list[j].theme == 4) {
+				printf("%s \n", list[j].name);
+				printf("거리: %.1lfkm \n", list[j].distance);
+				printf("주소(전화번호): %s \n", list[j].address_phonenumber);
+				printf("정보: %s \n", list[j].information);
+				printf("\n");
+
+			}
+		}
+		break;
+
+	}
 }
