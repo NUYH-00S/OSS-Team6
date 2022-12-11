@@ -6,7 +6,7 @@
 #define size_place 34
 typedef struct place {
 	char name[32];
-	char review[512];
+	char review[MAX];
 } place;
 
 void search_place(place list[size_place]);
@@ -24,12 +24,12 @@ void search_place(place list[size_place])
 {
 	place list_place[size_place];
 
-	int i, j, k, l, m;
+	int i, j, k, l;
 	char* ptr;
 	char line[MAX];
 
-	int PlaceNum;
-	char review_contents[64];
+	int SelectPlace;
+	char review_contents[512];
 
 	char* fileName = "data_review.csv";
 	FILE* file = fopen(fileName, "rb");
@@ -47,8 +47,8 @@ void search_place(place list[size_place])
 		while (ptr != NULL) {
 			strcpy(list_place[i].name, ptr);
 			ptr = strtok(NULL, ",");
-			strcpy(list_place[i].review, ptr);
-			ptr = strtok(NULL, ",");
+			strcpy(list_place[i].review, ptr);			
+			ptr = strtok(NULL, ",");			
 		}
 	}
 	fclose(file);
@@ -61,24 +61,27 @@ void search_place(place list[size_place])
 		printf("%d.%s  ", l, list_place[l].name);
 	}
 	printf("\n\n선택지: ");
-	scanf_s("%d", &PlaceNum);
-	switch (PlaceNum)
+	scanf_s("%d", &SelectPlace);
+	switch (SelectPlace)
 	{
 	case 1:
 	{
 		j = 1;
 		printf("\n\texit을 입력하면 종료합니다.\n\n\n");
-		printf("<%s> %s", list_place[j].name, list_place[j].review);		
+		printf("<%s> %s", list_place[j].name, list_place[j].review);
+		char review[512];
+		strcpy(review, list_place[j].review);
 		while (1)
 		{
-			scanf("%[^\n]", review_contents);
+			scanf("%s", review_contents);
 			getchar();			
 			if (strcmp(review_contents, "exit") == 0) {
 				printf("\n\t리뷰 입력을 종료합니다.\n\n");
 				break;
 			}
-			strcat(list_place[j].review, review_contents);			
-		}		
+			strcat(review, review_contents);
+		}
+		strcpy(list_place[j].review, review);
 		break;
 	}
 	}	
@@ -88,8 +91,7 @@ void search_place(place list[size_place])
 	{
 		fputs(list_place[k].name, file);
 		fputs(",", file);
-		fputs(list_place[k].review, file);
-		
+		fputs(list_place[k].review, file);		
 	}
 	fclose(file);
 }
