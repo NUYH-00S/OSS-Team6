@@ -607,3 +607,73 @@ void category_theme(spot list[size_spot]) {
 
 	}
 }
+
+
+int main(int argc, char* argv[]) {
+
+    printf("청주에서 찾고 싶은 장소가 있나요?.\n");
+    printf("검색해보세요!\n");
+
+    char cKeyword[999999];
+    char cData[33][500] = {
+        "국립청주박물관",
+        "옥화구곡 관광길",
+        "현도장승마을",
+        "청주시립미술관",
+        "두꺼비 생태공원",
+        "용화사",
+        "신미술관",
+        "청주 흥덕사지",
+        "청주고인쇄박물관",
+        "문암생태공원",
+        "청원연꽃마을",
+        "오창호수공원",
+        "초정행궁",
+        "문화제조창",
+        "미래지농촌테마공원",
+        "백로식당",
+        "쫄쫄호떡",
+        "마가레뜨",
+        "상당집",
+        "대산보리밥",
+        "더그랜드허젤",
+        "유미당",
+        "연게소문",
+        "수이재 1928",
+        "만타",
+        "두리떡볶이",
+        "햇살왕만두",
+        "대추나무집",
+        "리리크",
+        "입이즐거운그만두",
+        "옛날뜰" };
+
+    int iIdx = 0;
+    for (iIdx = 0; iIdx < 4; iIdx++) {
+
+        printf("검색 하실 단어를 입력하세요.\n\n");
+        int iMenu = 0;
+
+        printf("검색 :");
+        scanf("%s", cKeyword);
+        printf("\n검색 결과\n");
+        printf("-------------------------------\n\n");
+
+        int iIdxCData = 0, iNoResult = 0;
+        for (iIdxCData = 0; iIdxCData < 10; iIdxCData++) {
+
+            if (strspn(cKeyword, cData[iIdxCData]) == strlen(cKeyword)) {
+                printf("%s\n", cData[iIdxCData]); /*검색결과*/
+                iNoResult++;
+            }
+        }
+        if (iNoResult == 0) {
+            printf("검색결과가 없습니다.\n");
+        }
+
+        printf("----------------------------------\n\n");
+
+        system("pause");
+        system("cls");
+    }
+}
