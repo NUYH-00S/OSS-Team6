@@ -1,18 +1,20 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
-#define size_restaurant  17 //음식점의 개수
+#define size_restaurant  16 //음식점의 개수
 typedef struct restaurant { // 음식점의 이름, 거리, 지역, 메뉴, 주소(전화번호), 정보를 담은 구조체
 	char name[20];
-	double distance;
-	int area;
+	float distance;
+	int region;
 	int menu;
-	char address_phonenumber[100];
-	char information[200];
-}restaurant;
+	char address_phonenumber[200];
+	char information[300];
+}RESTAURANT;
 
-void sort_distance_restaurant(restaurant list[size_restaurant]); // 거리에 따른 음식점 정렬 함수
-void swap_restaurant(restaurant* x, restaurant* y); //음식점 정렬 하는데 도움을 주는 변환 함수
+void sort_distance_restaurant(RESTAURANT list[size_restaurant]); // 거리에 따른 음식점 정렬 함수
+void swap_restaurant(RESTAURANT* x, RESTAURANT* y); //음식점 정렬 하는데 도움을 주는 변환 함수
+const char* region(int n);
+const char* menu(int n);
 
 int main() {
 	int i;
@@ -20,7 +22,7 @@ int main() {
 	int b2, c2;
 	double d2;
 
-	restaurant list_restaurant[size_restaurant];// 음식점 구조체 배열 선언
+	RESTAURANT list_restaurant[size_restaurant];// 음식점 구조체 배열 선언
 	FILE* p2;
 
 	p2 = fopen("data_restaurant.csv", "r"); // 음식점을 담은 파일을 연다.
@@ -38,7 +40,7 @@ int main() {
 			strcpy(list_restaurant[i].name, a2);
 			a2 = strtok(NULL, ",");
 			b2 = atoi(a2);
-			list_restaurant[i].area = b2;
+			list_restaurant[i].region = b2;
 			a2 = strtok(NULL, ",");
 			c2 = atoi(a2);
 			list_restaurant[i].menu = c2;
@@ -61,10 +63,10 @@ int main() {
 	return 0;
 }
 
-void sort_distance_restaurant(restaurant list[size_restaurant]) {
+void sort_distance_restaurant(RESTAURANT list[size_restaurant]) {
 	int i, min, j;
 
-	for (i = 1; i < size_restaurant; i++) {
+	for (i = 0; i < size_restaurant; i++) {
 		min = i;
 		for (j = i + 1; j < size_restaurant; j++) {
 			if (list[j].distance < list[min].distance)
@@ -73,23 +75,44 @@ void sort_distance_restaurant(restaurant list[size_restaurant]) {
 		swap_restaurant(&list[i], &list[min]);
 	}
 
-	printf("<< 거리순 정렬 >> \n");
-	printf("\n");
-	for (i = 1; i < size_restaurant; i++) {
-		printf("%s \n", list[i].name);
-		printf("거리: %.1lfkm \n", list[i].distance);
-		printf("주소(전화번호): %s \n", list[i].address_phonenumber);
-		printf("정보: %s \n", list[i].information);
-		printf("\n");
+	printf("  ==================================================================\n");
+	printf("       이름                    지역         메뉴            거리\n");
+	printf("  ==================================================================\n\n");
+
+	for (i = 0; i < size_restaurant; i++) {
+		printf("   %02d. %-20s %8s\t%8s\t%6.1f km\n\n", i + 1, list[i].name, region(list[i].region), menu(list[i].menu), list[i].distance);
 
 	}
+	printf("  ==================================================================\n\n");
 
 }
 
-void swap_restaurant(restaurant* x, restaurant* y) {
-	restaurant temp;
+void swap_restaurant(RESTAURANT* x, RESTAURANT* y) {
+	RESTAURANT temp;
 
 	temp = *x;
 	*x = *y;
 	*y = temp;
+}
+
+const char* region(int n)
+{
+	if (n == 1)
+		return "상당구";
+	else if (n == 2)
+		return "서원구";
+	else if (n == 3)
+		return "흥덕구";
+	else
+		return "청원구";
+}
+
+const char* menu(int n)
+{
+	if (n == 1)
+		return "한식";
+	else if (n == 2)
+		return "분식";
+	else
+		return "양식";
 }
