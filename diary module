@@ -7,7 +7,7 @@
 
 typedef struct place {
 	char name[32];
-	char blank[8];
+	char ID[8];
 } place;
 
 void search_place(place list[size_place]);
@@ -85,7 +85,7 @@ void search_place(place list[size_place])
 		while (ptr != NULL) {
 			strcpy(list_place[i].name, ptr);
 			ptr = strtok(NULL, ",");
-			strcpy(list_place[i].blank, ptr);
+			strcpy(list_place[i].ID, ptr);
 			ptr = strtok(NULL, ",");
 		}
 	}
