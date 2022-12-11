@@ -2,11 +2,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define MAX 10000
-#define size_place 3
+#define MAX 2048
+#define size_place 34
+
 typedef struct place {
 	char name[32];
-	char blank[16];
+	char blank[8];
 } place;
 
 void search_place(place list[size_place]);
@@ -16,10 +17,46 @@ int main() {
 	place list_place[size_place];
 
 	search_place(list_place);
-	
 
 	return 0;
 }
+
+
+
+void review(char* reviewName)
+{
+	char line[MAX];
+	char contents[MAX];
+
+	char* fileName = reviewName;
+	FILE* file = fopen(fileName, "a+b");
+	if (file == NULL)
+	{
+		printf("파일 열기 실패\n");
+		return 1;
+	}
+
+	while (fgets(line, MAX, file) != NULL) {
+		printf("%s", line);
+	}
+	while (1)
+	{
+		scanf("%s", contents);
+		getchar();
+
+		if (strcmp(contents, "EXIT") == 0)
+		{
+			printf("\n\n=================================\n");
+			printf("\n   여행 일기 입력을 종료합니다.\n\n");
+			break;
+		}
+
+		fputs(contents, file);
+		fputs("\n", file);
+	}
+	fclose(file);
+}
+
 
 
 void search_place(place list[size_place])
@@ -31,7 +68,7 @@ void search_place(place list[size_place])
 	char line[MAX];
 
 	int SelectPlace;
-	
+
 	char* fileName = "data_review.csv";
 	FILE* file = fopen(fileName, "rb");
 	if (file == NULL) {
@@ -56,58 +93,245 @@ void search_place(place list[size_place])
 
 
 
-	printf("\n\t기행문을 남길 장소를 선택하세요.\n\n");
+	printf("\n\t\t<여행 일기를 남길 장소를 선택하세요>\n\n");
 	for (l = 1; l < size_place; l++)
 	{
-		printf("%d.%s  ", l, list_place[l].name);
+		printf("\t%d. %s\n", l, list_place[l].name);
 	}
-	printf("\n\n선택지: ");
+	printf("\n\n[선택지]: ");
 	scanf_s("%d", &SelectPlace);
 	switch (SelectPlace)
 	{
 	case 1:
-	{
 		j = 1;
-		printf("\t<%s>\n", list_place[j].name);
-		printf("\n\texit을 입력하면 종료합니다.\n\n\n");
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review1.txt");
+		break;
+	case 2:
+		j = 2;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
 		review("review2.txt");
-		
+		break;
+	case 3:
+		j = 3;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review3.txt");
+		break;
+	case 4:
+		j = 4;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review4.txt");
+		break;
+	case 5:
+		j = 5;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review5.txt");
+		break;
+	case 6:
+		j =61;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review6.txt");
+		break;
+	case 7:
+		j = 7;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review7.txt");
+		break;
+	case 8:
+		j = 8;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review8.txt");
+		break;
+	case 9:
+		j = 9;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review9.txt");
+		break;
+	case 10:
+		j = 10;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review10.txt");
+		break;
+	case 11:
+		j = 11;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review11.txt");
+		break;
+	case 12:
+		j = 12;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review12.txt");
+		break;
+	case 13:
+		j = 13;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review13.txt");
+		break;
+	case 14:
+		j = 14;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review14.txt");
+		break;
+	case 15:
+		j = 15;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review15.txt");
+		break;
+	case 16:
+		j = 16;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review16.txt");
+		break;
+	case 17:
+		j = 17;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review17.txt");
+		break;
+	case 18:
+		j = 18;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review18.txt");
+		break;
+	case 19:
+		j = 19;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review19.txt");
+		break;
+	case 20:
+		j = 20;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review20.txt");
+		break;
+	case 21:
+		j = 21;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review21.txt");
+		break;
+	case 22:
+		j = 22;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review22.txt");
+		break;
+	case 23:
+		j = 23;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review23.txt");
+		break;
+	case 24:
+		j = 24;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review24.txt");
+		break;
+	case 25:
+		j = 25;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review25.txt");
+		break;
+	case 26:
+		j = 26;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review26.txt");
+		break;
+	case 27:
+		j = 27;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review27.txt");
+		break;
+	case 28:
+		j = 28;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review28.txt");
+		break;
+	case 29:
+		j = 29;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review29.txt");
+		break;
+	case 30:
+		j = 30;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review30.txt");
+		break;
+	case 31:
+		j = 31;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review31.txt");
+		break;
+	case 32:
+		j = 32;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review32.txt");
+		break;
+	case 33:
+		j = 33;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review33.txt");
 		break;
 	}
-	}	
-}
-
-
-
-void review(char* reviewName)
-{
-	char line[MAX];
-	char contents[MAX];
-
-	char* fileName = reviewName;
-	FILE* file = fopen(fileName, "a+b");
-	if (file == NULL)
-	{
-		printf("파일 열기 실패\n");
-		return 1;
-	}
-
-	while (fgets(line, MAX, file) != NULL) {
-		printf("%s", line);
-	}
-	while (1)
-	{
-		scanf("%[^\n]", contents);
-		getchar();
-
-		if (strcmp(contents, "EXIT") == 0)
-		{
-			printf("\n\t리뷰 입력을 종료합니다.\n\n");
-			break;
-		}
-
-		fputs(contents, file);
-		fputs("\n", file);
-	}
-	fclose(file);
 }
