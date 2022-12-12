@@ -5,30 +5,40 @@
 #include <stdbool.h>
 #include<string.h>
 
+#define PICK_spot                          101;
+#define PICK_restaurant                    102;
+
 #define size_spot 17       // 관광지의 개수
 #define size_restaurant 16 // 맛집의 개수
+#define MAX 2048
+#define size_place 34
 
 int x, y;		           // 전역변수 커서 좌표
+int condition;
 
 // 관광지의 정보를 담은 구조체
-typedef struct spot
-{
+typedef struct spot{
 	char name[20], address_phonenumber[200], information[300];   // 이름, 주소와 전화번호, 정보
 	int region, theme;                                           // 지역, 테마
 	float distance;                                              // 거리
 }SPOT;
 
 // 맛집의 정보를 담은 구조체
-typedef struct restaurant
-{
+typedef struct restaurant{
 	char name[30], address_phonenumber[200], information[300];   // 이름, 주소와 전화번호, 정보
 	int region, menu;                                            // 지역, 메뉴
 	float distance;                                              // 거리
 }RESTAURANT;
 
+typedef struct place {
+	char name[32];
+	char ID[8];
+} PLACE;
+
 // 구조체 선언
 SPOT list_spot[size_spot];
 RESTAURANT list_restaurant[size_restaurant];
+PLACE list_place[size_place];
 
 // 함수 선언
 void Cursor(bool flag, int size);
@@ -43,13 +53,18 @@ void print_spotlist(SPOT* list_spot);
 void print_restaurantlist(RESTAURANT* list_restaurant);
 void sort_distance_restaurant(RESTAURANT list[size_restaurant]); // 거리에 따른 음식점 정렬 함수
 void swap_restaurant(RESTAURANT* x, RESTAURANT* y); //음식점 정렬 하는데 도움을 주는 변환 함수
-void category_area_restaurant(RESTAURANT list[size_restaurant]); // 음식점을 지역(1.상당구 2.서원구 3.창원구 4.청원구)에 따라 분류하는 함수
+void category_region_restaurant(RESTAURANT list[size_restaurant]); // 음식점을 지역(1.상당구 2.서원구 3.창원구 4.청원구)에 따라 분류하는 함수
 void category_menu(RESTAURANT list[size_restaurant]); // 음식점을 메뉴(1.한식 2.분식 3.양식)에 따라 분류하는 함수
 void sort_distance_spot(SPOT list[size_spot]); // 거리에 따른 관광지 정렬 함수
 void swap_spot(SPOT* x, SPOT* y); // 관광지 정렬 하는데 도움을 주는 변환 함수
-void category_area_spot(SPOT list[size_spot]); // 관광지를 지역(1.상당구 2.서원구 3.창원구 4.청원구)에 따라 분류하는 함수
+void category_region_spot(SPOT list[size_spot]); // 관광지를 지역(1.상당구 2.서원구 3.창원구 4.청원구)에 따라 분류하는 함수
 void category_theme(SPOT list[size_spot]); // 관광지를 테마(1.교육체험관광 2.농촌체험관광 3.역사문화관광 4.생태자연관광)에 따라 분류하는 함수
-
+void search_spot();
+void search_restaurant();
+void details_spot(int n);
+void details_restaurant(int n);
+void review(char* reviewName);
+void search_place(PLACE list[size_place]);
 
 int main()
 {
@@ -61,7 +76,7 @@ int main()
 	FILE* p1;
 	FILE* p2;
 
-	if ((p1 = fopen("data_spot.txt", "r")) == NULL) // data_spot.txt 파일 데이터 받아옴
+	if ((p1 = fopen("data_spot.csv", "r")) == NULL) // data_spot.txt 파일 데이터 받아옴
 	{
 		printf("파일 읽기 실패!");
 		return -1;
@@ -89,7 +104,7 @@ int main()
 	}
 	fclose(p1);
 
-	if ((p2 = fopen("data_restaurant.txt", "r")) == NULL) // data_restaurant.txt 파일 데이터 받아옴
+	if ((p2 = fopen("data_restaurant.csv", "r")) == NULL) // data_restaurant.txt 파일 데이터 받아옴
 	{
 		printf("파일 읽기 실패!");
 		return -1;
@@ -178,8 +193,8 @@ void menu_display()
 	gotoxy(5, 16);	puts("1. 검   색");
 	gotoxy(25, 16);	puts("2. 정   렬");
 	gotoxy(45, 16);	puts("3. 카테고리");
-	gotoxy(65, 16);	puts("4. 여행일기"); // 이거 이름 바꾸셔도 돼요
-	gotoxy(85, 16);	puts("5. 상세정보");
+	gotoxy(65, 16);	puts("4. 상세정보"); 
+	gotoxy(85, 16);	puts("5. 리   뷰");
 
 	gotoxy(x, y);		// 모두 출력한 후, 원래의 커서 위치로 이동
 	printf("▶");
@@ -205,62 +220,135 @@ void move(int m, int n)
 	printf("▶");		// 해당 커서의 위치로 이동 후 ▶를 출력한다.
 }
 
-
+// 커서의 x, y좌표를 받아서 해당하는 함수 실행
 void run(int x, int y)
 {
 	if (x == 2 && y == 13) // 관광지 목록 보기
 	{
 		menu_display();
-		gotoxy(1, 19);
+		gotoxy(1, 24);
 		print_spotlist(list_spot);
+		condition = PICK_spot;
 	}
+
 	else if (x == 22 && y == 13) // 맛집 목록 보기
 	{
 		menu_display();
-		gotoxy(1, 19);
+		gotoxy(1, 24);
 		print_restaurantlist(list_restaurant);
+		condition = PICK_restaurant;
 	}
-
-	/*본인이 만든 함수 여기에 넣어주시면 됩니다. 원래는 제가 다 하려고 했는데, 지금 너무 심신미약상태라 부탁드립니다. ㅠㅠ
-	위에 보이는 것처럼
-	1. menu_display();
-	2. gotoxy(1, 19);
-	3. 본인이 구현한 함수
-	이 차례로 넣어주시면 됩니다.*/
 
 	else if (x == 2 && y == 16) // 1. 검색
 	{
-		menu_display();
+		//menu_display();
+		gotoxy(1, 19);
+		if (condition == 101)
+			search_spot();
+		else if (condition == 102) 
+			search_restaurant();
+		else {
+			gotoxy(2, 17);
+			printf("\n\n    검색할 영역을 다시 지정해주세요 (관광지 목록 보기 or 맛집 목록 보기 먼저 선택)");
+		}
 	}
+
 	else if (x == 22 && y == 16) // 2. 정렬
 	{
 		menu_display();
-		gotoxy(1, 19);
-		sort_distance_restaurant(list_restaurant); //거리에 따른 음식점 정렬함수 실행
-		sort_distance_spot(list_spot); // 거리에 따른 관광지 정렬함수 실행
-
+		gotoxy(1, 24);
+		if (condition == 101)
+			sort_distance_spot(list_spot); // 거리에 따른 관광지 정렬함수 실행
+		else if (condition == 102)
+			sort_distance_restaurant(list_restaurant); //거리에 따른 음식점 정렬함수 실행
+		else {
+			gotoxy(2, 17);
+			printf("\n\n    정렬할 영역을 다시 지정해주세요 (관광지 목록 보기 or 맛집 목록 보기 먼저 선택)");
+		}
 	}
+
 	else if (x == 42 && y == 16) // 3. 카테고리
 	{
-		menu_display();
-		gotoxy(1, 19);
-		category_area_restaurant(list_restaurant); //지역에 따라 음식점을 분류하는 함수 실행
-		category_menu(list_restaurant); // 메뉴에 따라 음식점을 분류하는 함수 실행
-		category_area_spot(list_spot); // 지역에 따라 관광지를 분류하는 함수 실행
-		category_theme(list_spot); // 테마에 따라 관광지를 분류하는 함수 실행
+		int n = 0;
+		while (n != 1 && n != 2){
+			menu_display();
+			gotoxy(1, 19);
+			if (condition == 101) {
+				printf("    카테고리 종류 선택 (1: 지역 / 2: 테마) : ");
+				scanf("%d", &n);
+				printf("\n");
+				if (n == 1) 
+					category_region_spot(list_spot); // 지역에 따라 관광지를 분류하는 함수 실행
+				else if (n == 2) 
+					category_theme(list_spot); // 테마에 따라 관광지를 분류하는 함수 실행
+				else {
+					printf("\n\n                  잘못된 값을 입력하였습니다. 카테고리의 종류를 다시 입력해주세요");
+					Sleep(3000);
+				}
+			}
+			else if (condition == 102) {
+				printf("    카테고리 종류 선택 (1: 지역 / 2: 메뉴) : ");
+				scanf("%d", &n);
+				printf("\n");
+				if (n == 1) 
+					category_region_restaurant(list_restaurant); //지역에 따라 음식점을 분류하는 함수 실행
+				else if (n == 2) 
+					category_menu(list_restaurant); // 메뉴에 따라 음식점을 분류하는 함수 실행
+				else {
+					printf("\n\n                  잘못된 값을 입력하였습니다. 카테고리의 종류를 다시 입력해주세요");
+					Sleep(3000);
+				}
+			}
+			else {
+				gotoxy(2, 17);
+				printf("\n\n    정렬할 영역을 다시 지정해주세요 (관광지 목록 보기 or 맛집 목록 보기 먼저 선택)");
+				break;
+			}
+		}
 	}
-	else // 4. 상세정보
+
+	else if (x == 62 && y == 16) // 4. 상세사항
+	{
+		int n;
+	
+		menu_display();
+		gotoxy(1, 24);
+		print_restaurantlist(list_restaurant);
+		gotoxy(1, 19);
+		
+		if (condition == 101)
+		{
+			printf("    항목의 가장 앞에 있는 번호를 입력하면 상세정보를 볼 수 있습니다. (숫자 앞의 0은 입력하지 않아도 됨)\n\n    번호 입력 : ");
+			scanf("%d", &n);
+			details_spot(n - 1);
+		}
+		else if (condition == 102)
+		{
+			printf("    항목의 가장 앞에 있는 번호를 입력하면 상세정보를 볼 수 있습니다. (숫자 앞의 0은 입력하지 않아도 됨)\n\n    번호 입력 : ");
+			scanf("%d", &n);
+			details_restaurant(n - 1);
+		}
+		else {
+			printf("\n\    관광지 목록 보기 or 맛집 목록 보기를 선택 한 후 이용해주세요");
+		}
+	}
+
+	else // 5. 리뷰
 	{
 		menu_display();
+		gotoxy(1, 18);
+		search_place(list_place);
 	}
 }
 
-void gotoxy(int x, int y)	// (x,y)좌표로 커서를 이동
+// (x,y)좌표로 커서를 이동
+void gotoxy(int x, int y)	
 {
 	COORD pos = { x - 1,y - 1 };	// 원점은 (0,0)
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
 }
 
+// 정수로 된 지역 번호를 문자열로 바꿈
 const char* region(int n)
 {
 	if (n == 1)
@@ -273,6 +361,7 @@ const char* region(int n)
 		return "청원구";
 }
 
+// 정수로 된 테마 번호를 문자열로 바꿈
 const char* theme(int n)
 {
 	if (n == 1)
@@ -285,6 +374,7 @@ const char* theme(int n)
 		return "생태자연관광";
 }
 
+// 정수로 된 메뉴 번호를 문자열로 바꿈
 const char* menu(int n)
 {
 	if (n == 1)
@@ -302,8 +392,7 @@ void print_spotlist(SPOT* list_spot)
 	printf("  =========================================================================\n\n");
 	for (int i = 0; i < size_spot; i++) 
 		printf("   %02d. %-18s\t%8s\t%11s\t%6.1f km\n\n", i + 1, list_spot[i].name, region(list_spot[i].region), theme(list_spot[i].theme), list_spot[i].distance);
-	printf("  ==================================================================\n\n");
-	return 0;
+	printf("  =========================================================================\n\n");
 }
 
 void print_restaurantlist(RESTAURANT* list_restaurant)
@@ -314,7 +403,99 @@ void print_restaurantlist(RESTAURANT* list_restaurant)
 	for (int i = 0; i < size_restaurant; i++)
 		printf("   %02d. %-20s %8s\t%8s\t%6.1f km\n\n", i + 1, list_restaurant[i].name, region(list_restaurant[i].region), menu(list_restaurant[i].menu), list_restaurant[i].distance);
 	printf("  ==================================================================\n\n");
-	return 0;
+}
+
+void search_spot()
+{
+	int n = 0, tmp;
+	int index[size_spot] = { 0 };
+	char input[256];
+	char* p;
+
+	printf("    청주에서 찾고 싶은 장소가 있나요?\n");
+	printf("    검색해보세요!\n\n    검색 하실 단어를 입력하세요 (전체 항목에서 검색됩니다.) : ");
+	scanf("%s", input);
+
+	// 탐색
+	for (int i = 0; i < size_spot; i++) 
+	{
+		p = strstr(list_spot[i].name, input);
+
+		if (p != NULL)
+		{
+			index[n] = i + 1;
+			n++;
+		}
+	}
+
+	// 출력
+	menu_display();
+	gotoxy(1, 18);
+
+	printf("\n   \"%s\"에 관한 검색결과\n\t.\n\t.\n\t.\n\t.\n\n", input);
+	if (index[0] == 0)
+		printf("\n      \"%s\"에 관한 검색결과가 없습니다.\n", input);
+	else {
+		printf("  =========================================================================\n");
+		printf("       이름                        지역             테마            거리\n");
+		printf("  =========================================================================\n\n");
+		for (int i = 0; i < size_spot; i++)
+		{
+			if (index[i] != 0)
+			{
+				tmp = index[i] - 1;
+				printf("   %02d. %-18s\t%8s\t%11s\t%6.1f km\n\n", i + 1, list_spot[tmp].name, region(list_spot[tmp].region), theme(list_spot[tmp].theme), list_spot[tmp].distance);
+			}
+		}
+		printf("  =========================================================================\n\n");
+	}
+}
+
+void search_restaurant()
+{
+	int n = 0, tmp;
+	int index[size_restaurant] = { 0 };
+	char input[512];
+	char* p;
+
+	printf("    청주에서 찾고 싶은 맛집이 있나요?\n");
+	printf("    검색해보세요!\n\n    검색 하실 단어를 입력하세요 (전체 항목에서 검색됩니다.) : ");
+	scanf("%s", input);
+
+	// 탐색
+	for (int i = 0; i < size_restaurant; i++)
+	{
+		p = strstr(list_restaurant[i].name, input);
+
+		if (p != NULL)
+		{
+			index[n] = i + 1;
+			n++;
+		}
+	}
+
+	// 출력
+	menu_display();
+	gotoxy(1, 18);
+	
+	printf("\n   \"%s\"에 관한 검색결과\n\t.\n\t.\n\t.\n\t.\n\n", input);
+	if (index[0] == 0)
+		printf("\n      \"%s\"에 관한 검색결과가 없습니다.\n", input);
+	else {
+		printf("\n");
+		printf("  ==================================================================\n");
+		printf("       이름                    지역         메뉴            거리\n");
+		printf("  ==================================================================\n\n");
+		for (int i = 0; i < size_spot; i++)
+		{
+			if (index[i] != 0)
+			{
+				tmp = index[i] - 1;
+				printf("   %02d. %-20s\t%8s\t%8s\t%6.1f km\n\n", i + 1, list_restaurant[tmp].name, region(list_restaurant[tmp].region), menu(list_restaurant[tmp].menu), list_restaurant[tmp].distance);
+			}
+		}
+		printf("  ==================================================================\n\n");
+	}
 }
 
 void sort_distance_spot(SPOT list[size_spot]) {
@@ -332,10 +513,10 @@ void sort_distance_spot(SPOT list[size_spot]) {
 	printf("  =========================================================================\n");
 	printf("       이름                        지역             테마            거리\n");
 	printf("  =========================================================================\n\n");
-	
+
 	for (i = 0; i < size_spot; i++) {
 		printf("   %02d. %-18s\t%8s\t%11s\t%6.1f km\n\n", i + 1, list[i].name, region(list[i].region), theme(list[i].theme), list[i].distance);
-		
+
 	}
 	printf("  ==================================================================\n\n");
 }
@@ -346,137 +527,6 @@ void swap_spot(SPOT* x, SPOT* y) {
 	temp = *x;
 	*x = *y;
 	*y = temp;
-}
-
-void category_area_spot(SPOT list[size_spot]) {
-	int i, j;
-	int q = 1;
-	printf("1.상당구 2.서원구 3.흥덕구 4.청원구 : ");
-	scanf_s("%d", &i);
-
-	switch (i) {
-	case 1:
-		printf("  =========================================================================\n");
-		printf("       이름                        지역             테마            거리\n");
-		printf("  =========================================================================\n\n");
-		for (j = 0; j < size_spot; j++) {
-			if (list[j].region == 1) {
-				printf("   %02d. %-18s\t%8s\t%11s\t%6.1f km\n\n", q, list[j].name, region(list[j].region), theme(list[j].theme), list[j].distance);
-				q++;
-			}
-		}
-		q = 0;
-		printf("  ==================================================================\n\n");
-		break;
-	case 2:
-		printf("  =========================================================================\n");
-		printf("       이름                        지역             테마            거리\n");
-		printf("  =========================================================================\n\n");
-		for (j = 0; j < size_spot; j++) {
-			if (list[j].region == 2) {
-				printf("   %02d. %-18s\t%8s\t%11s\t%6.1f km\n\n", q, list[j].name, region(list[j].region), theme(list[j].theme), list[j].distance);
-				q++;
-			}
-		}
-		q = 0;
-		printf("  ==================================================================\n\n");
-		break;
-	case 3:
-		printf("  =========================================================================\n");
-		printf("       이름                        지역             테마            거리\n");
-		printf("  =========================================================================\n\n");
-		for (j = 0; j < size_spot; j++) {
-			if (list[j].region == 3) {
-				printf("   %02d. %-18s\t%8s\t%11s\t%6.1f km\n\n", q, list[j].name, region(list[j].region), theme(list[j].theme), list[j].distance);
-				q++;
-
-			}
-		}
-		q = 0;
-		printf("  ==================================================================\n\n");
-		break;
-	case 4:
-		printf("  =========================================================================\n");
-		printf("       이름                        지역             테마            거리\n");
-		printf("  =========================================================================\n\n");
-		for (j = 0; j < size_spot; j++) {
-			if (list[j].region == 4) {
-				printf("   %02d. %-18s\t%8s\t%11s\t%6.1f km\n\n", q, list[j].name, region(list[j].region), theme(list[j].theme), list[j].distance);
-				q++;
-
-			}
-		}
-		q = 0;
-		printf("  ==================================================================\n\n");
-		break;
-
-	}
-}
-
-void category_theme(SPOT list[size_spot]) {
-	int i, j;
-	int q = 1;
-	printf("1.교육체험관광 2.농촌체험관광 3.역사문화관광 4.생태자연관광 : ");
-	scanf_s("%d", &i);
-
-	switch (i) {
-	case 1:
-		printf("  =========================================================================\n");
-		printf("       이름                        지역             테마            거리\n");
-		printf("  =========================================================================\n\n");
-		for (j = 0; j < size_spot; j++) {
-			if (list[j].theme == 1) {
-				printf("   %02d. %-18s\t%8s\t%11s\t%6.1f km\n\n", q, list[j].name, region(list[j].region), theme(list[j].theme), list[j].distance);
-				q++;
-
-			}
-		}
-		q = 0;
-		printf("  ==================================================================\n\n");
-		break;
-	case 2:
-		printf("  =========================================================================\n");
-		printf("       이름                        지역             테마            거리\n");
-		printf("  =========================================================================\n\n");
-		for (j = 0; j < size_spot; j++) {
-			if (list[j].theme == 2) {
-				printf("   %02d. %-18s\t%8s\t%11s\t%6.1f km\n\n", q, list[j].name, region(list[j].region), theme(list[j].theme), list[j].distance);
-				q++;
-
-			}
-		}
-		q = 0;
-		printf("  ==================================================================\n\n");
-		break;
-	case 3:
-		printf("  =========================================================================\n");
-		printf("       이름                        지역             테마            거리\n");
-		printf("  =========================================================================\n\n");
-		for (j = 0; j < size_spot; j++) {
-			if (list[j].theme == 3) {
-				printf("   %02d. %-18s\t%8s\t%11s\t%6.1f km\n\n", q, list[j].name, region(list[j].region), theme(list[j].theme), list[j].distance);
-				q++;
-			}
-		}
-		q = 0;
-		printf("  ==================================================================\n\n");
-		break;
-	case 4:
-		printf("  =========================================================================\n");
-		printf("       이름                        지역             테마            거리\n");
-		printf("  =========================================================================\n\n");
-		for (j = 0; j < size_spot; j++) {
-			if (list[j].theme == 4) {
-				printf("   %02d. %-18s\t%8s\t%11s\t%6.1f km\n\n", q, list[j].name, region(list[j].region), theme(list[j].theme), list[j].distance);
-				q++;
-
-			}
-		}
-		q = 0;
-		printf("  ==================================================================\n\n");
-		break;
-
-	}
 }
 
 void sort_distance_restaurant(RESTAURANT list[size_restaurant]) {
@@ -511,10 +561,144 @@ void swap_restaurant(RESTAURANT* x, RESTAURANT* y) {
 	*y = temp;
 }
 
-void category_area_restaurant(RESTAURANT list[size_restaurant]) {
+void category_region_spot(SPOT list[size_spot]) {
 	int i, j;
 	int q = 1;
-	printf("1.상당구 2.서원구 3.흥덕구 4.청원구 : ");
+	printf("\n    1.상당구 2.서원구 3.흥덕구 4.청원구 : ");
+	scanf_s("%d", &i);
+	printf("\n");
+
+	switch (i) {
+	case 1:
+		printf("  =========================================================================\n");
+		printf("       이름                        지역             테마            거리\n");
+		printf("  =========================================================================\n\n");
+		for (j = 0; j < size_spot; j++) {
+			if (list[j].region == 1) {
+				printf("   %02d. %-18s\t%8s\t%11s\t%6.1f km\n\n", q, list[j].name, region(list[j].region), theme(list[j].theme), list[j].distance);
+				q++;
+			}
+		}
+		q = 0;
+		printf("  =========================================================================\n\n");
+		break;
+	case 2:
+		printf("  =========================================================================\n");
+		printf("       이름                        지역             테마            거리\n");
+		printf("  =========================================================================\n\n");
+		for (j = 0; j < size_spot; j++) {
+			if (list[j].region == 2) {
+				printf("   %02d. %-18s\t%8s\t%11s\t%6.1f km\n\n", q, list[j].name, region(list[j].region), theme(list[j].theme), list[j].distance);
+				q++;
+			}
+		}
+		q = 0;
+		printf("  =========================================================================\n\n");
+		break;
+	case 3:
+		printf("  =========================================================================\n");
+		printf("       이름                        지역             테마            거리\n");
+		printf("  =========================================================================\n\n");
+		for (j = 0; j < size_spot; j++) {
+			if (list[j].region == 3) {
+				printf("   %02d. %-18s\t%8s\t%11s\t%6.1f km\n\n", q, list[j].name, region(list[j].region), theme(list[j].theme), list[j].distance);
+				q++;
+
+			}
+		}
+		q = 0;
+		printf("  =========================================================================\n\n");
+		break;
+	case 4:
+		printf("  =========================================================================\n");
+		printf("       이름                        지역             테마            거리\n");
+		printf("  =========================================================================\n\n");
+		for (j = 0; j < size_spot; j++) {
+			if (list[j].region == 4) {
+				printf("   %02d. %-18s\t%8s\t%11s\t%6.1f km\n\n", q, list[j].name, region(list[j].region), theme(list[j].theme), list[j].distance);
+				q++;
+
+			}
+		}
+		q = 0;
+		printf("  =========================================================================\n\n");
+		break;
+
+	}
+}
+
+void category_theme(SPOT list[size_spot]) {
+	int i, j;
+	int q = 1;
+	printf("\n    1.교육체험관광 2.농촌체험관광 3.역사문화관광 4.생태자연관광 : ");
+	scanf_s("%d", &i);
+	printf("\n");
+
+	switch (i) {
+	case 1:
+		printf("  =========================================================================\n");
+		printf("       이름                        지역             테마            거리\n");
+		printf("  =========================================================================\n\n");
+		for (j = 0; j < size_spot; j++) {
+			if (list[j].theme == 1) {
+				printf("   %02d. %-18s\t%8s\t%11s\t%6.1f km\n\n", q, list[j].name, region(list[j].region), theme(list[j].theme), list[j].distance);
+				q++;
+
+			}
+		}
+		q = 0;
+		printf("  ========================================================================\n\n");
+		break;
+	case 2:
+		printf("  =========================================================================\n");
+		printf("       이름                        지역             테마            거리\n");
+		printf("  =========================================================================\n\n");
+		for (j = 0; j < size_spot; j++) {
+			if (list[j].theme == 2) {
+				printf("   %02d. %-18s\t%8s\t%11s\t%6.1f km\n\n", q, list[j].name, region(list[j].region), theme(list[j].theme), list[j].distance);
+				q++;
+
+			}
+		}
+		q = 0;
+		printf("  =========================================================================\n\n");
+		break;
+	case 3:
+		printf("  =========================================================================\n");
+		printf("       이름                        지역             테마            거리\n");
+		printf("  =========================================================================\n\n");
+		for (j = 0; j < size_spot; j++) {
+			if (list[j].theme == 3) {
+				printf("   %02d. %-18s\t%8s\t%11s\t%6.1f km\n\n", q, list[j].name, region(list[j].region), theme(list[j].theme), list[j].distance);
+				q++;
+			}
+		}
+		q = 0;
+		printf("  =========================================================================\n\n");
+		break;
+	case 4:
+		printf("  =========================================================================\n");
+		printf("       이름                        지역             테마            거리\n");
+		printf("  =========================================================================\n\n");
+		for (j = 0; j < size_spot; j++) {
+			if (list[j].theme == 4) {
+				printf("   %02d. %-18s\t%8s\t%11s\t%6.1f km\n\n", q, list[j].name, region(list[j].region), theme(list[j].theme), list[j].distance);
+				q++;
+
+			}
+		}
+		q = 0;
+		printf("  =========================================================================\n\n");
+		break;
+
+	}
+}
+
+
+void category_region_restaurant(RESTAURANT list[size_restaurant]) {
+	int i, j;
+	int q = 1;
+	printf("\n    1.상당구 2.서원구 3.흥덕구 4.청원구 : ");
 	scanf_s("%d", &i);
 	printf("\n");
 
@@ -583,7 +767,7 @@ void category_area_restaurant(RESTAURANT list[size_restaurant]) {
 void category_menu(RESTAURANT list[size_restaurant]) {
 	int i, j;
 	int q = 1;
-	printf("1.한식 2.분식 3.양식 : ");
+	printf("\n    1.한식 2.분식 3.양식 : ");
 	scanf_s("%d", &i);
 	printf("\n");
 
@@ -634,72 +818,339 @@ void category_menu(RESTAURANT list[size_restaurant]) {
 	}
 }
 
+void details_spot(int n)
+{
+	menu_display();
+	printf("\n\n\n");
+	printf("  ============================================================================\n");
+	printf("     %s\n", list_spot[n].name);
+	printf("  ----------------------------------------------------------------------------\n\n");
+	printf("\n     주소 (전화번호) : %s\n\n    관광지 정보 : %s", list_spot[n].address_phonenumber, list_spot[n].information);
+	printf("  ============================================================================\n\n");
+}
 
-//int main(int argc, char* argv[]) {
-//
-//	printf("청주에서 찾고 싶은 장소가 있나요?.\n");
-//	printf("검색해보세요!\n");
-//
-//	char cKeyword[999999];
-//	char cData[33][500] = {
-//		"국립청주박물관",
-//		"옥화구곡 관광길",
-//		"현도장승마을",
-//		"청주시립미술관",
-//		"두꺼비 생태공원",
-//		"용화사",
-//		"신미술관",
-//		"청주 흥덕사지",
-//		"청주고인쇄박물관",
-//		"문암생태공원",
-//		"청원연꽃마을",
-//		"오창호수공원",
-//		"초정행궁",
-//		"문화제조창",
-//		"미래지농촌테마공원",
-//		"백로식당",
-//		"쫄쫄호떡",
-//		"마가레뜨",
-//		"상당집",
-//		"대산보리밥",
-//		"더그랜드허젤",
-//		"유미당",
-//		"연게소문",
-//		"수이재 1928",
-//		"만타",
-//		"두리떡볶이",
-//		"햇살왕만두",
-//		"대추나무집",
-//		"리리크",
-//		"입이즐거운그만두",
-//		"옛날뜰" };
-//
-//	int iIdx = 0;
-//	for (iIdx = 0; iIdx < 4; iIdx++) {
-//
-//		printf("검색 하실 단어를 입력하세요.\n\n");
-//		int iMenu = 0;
-//
-//		printf("검색 :");
-//		scanf("%s", cKeyword);
-//		printf("\n검색 결과\n");
-//		printf("-------------------------------\n\n");
-//
-//		int iIdxCData = 0, iNoResult = 0;
-//		for (iIdxCData = 0; iIdxCData < 10; iIdxCData++) {
-//
-//			if (strspn(cKeyword, cData[iIdxCData]) == strlen(cKeyword)) {
-//				printf("%s\n", cData[iIdxCData]); /*검색결과*/
-//				iNoResult++;
-//			}
-//		}
-//		if (iNoResult == 0) {
-//			printf("검색결과가 없습니다.\n");
-//		}
-//
-//		printf("----------------------------------\n\n");
-//
-//		system("pause");
-//		system("cls");
-//	}
-//}
+void details_restaurant(int n)
+{
+
+	int lenth;
+	menu_display();
+	printf("\n\n\n");
+	printf("  ============================================================================\n");
+	printf("     %s\n", list_restaurant[n].name);
+	printf("  ----------------------------------------------------------------------------\n\n");
+	printf("\n    주소 (전화번호) : %s\n\n    메뉴 정보 : %s\n\n", list_restaurant[n].address_phonenumber, list_restaurant[n].information);
+	printf("  ============================================================================\n\n");
+}
+
+void review(char* reviewName)
+{
+	char line[MAX];
+	char contents[MAX];
+
+	char* fileName = reviewName;
+	FILE* file = fopen(fileName, "a+b");
+	if (file == NULL)
+	{
+		printf("파일 열기 실패\n");
+		return 1;
+	}
+
+	while (fgets(line, MAX, file) != NULL) {
+		printf("%s", line);
+	}
+	while (1)
+	{
+		scanf("%s", contents);
+		getchar();
+
+		if (strcmp(contents, "EXIT") == 0)
+		{
+			printf("\n\n=================================\n");
+			printf("\n   여행 일기 입력을 종료합니다.\n\n");
+			break;
+		}
+
+		fputs(contents, file);
+		fputs("\n", file);
+	}
+	fclose(file);
+}
+
+void search_place(PLACE list[size_place])
+{
+	PLACE list_place[size_place];
+
+	int i, j, l;
+	char* ptr;
+	char line[MAX];
+
+	int SelectPlace;
+
+	char* fileName = "data_review.csv";
+	FILE* file = fopen(fileName, "rb");
+	if (file == NULL) {
+		printf("파일 열기 실패\n");
+		return 1;
+	}
+
+	for (i = 0; i < size_place; i++)
+	{
+		fgets(line, MAX, file);
+		ptr = strtok(line, ",");
+
+
+		while (ptr != NULL) {
+			strcpy(list_place[i].name, ptr);
+			ptr = strtok(NULL, ",");
+			strcpy(list_place[i].ID, ptr);
+			ptr = strtok(NULL, ",");
+		}
+	}
+	fclose(file);
+
+
+
+	printf("\n\t\t<여행 일기를 남길 장소를 선택하세요>\n\n");
+	for (l = 1; l < size_place; l++)
+	{
+		printf("\t%d. %s\n", l, list_place[l].name);
+	}
+	printf("\n\n[선택지]: ");
+	scanf_s("%d", &SelectPlace);
+	switch (SelectPlace)
+	{
+	case 1:
+		j = 1;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review1.txt");
+		break;
+	case 2:
+		j = 2;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review2.txt");
+		break;
+	case 3:
+		j = 3;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review3.txt");
+		break;
+	case 4:
+		j = 4;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review4.txt");
+		break;
+	case 5:
+		j = 5;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review5.txt");
+		break;
+	case 6:
+		j = 61;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review6.txt");
+		break;
+	case 7:
+		j = 7;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review7.txt");
+		break;
+	case 8:
+		j = 8;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review8.txt");
+		break;
+	case 9:
+		j = 9;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review9.txt");
+		break;
+	case 10:
+		j = 10;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review10.txt");
+		break;
+	case 11:
+		j = 11;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review11.txt");
+		break;
+	case 12:
+		j = 12;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review12.txt");
+		break;
+	case 13:
+		j = 13;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review13.txt");
+		break;
+	case 14:
+		j = 14;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review14.txt");
+		break;
+	case 15:
+		j = 15;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review15.txt");
+		break;
+	case 16:
+		j = 16;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review16.txt");
+		break;
+	case 17:
+		j = 17;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review17.txt");
+		break;
+	case 18:
+		j = 18;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review18.txt");
+		break;
+	case 19:
+		j = 19;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review19.txt");
+		break;
+	case 20:
+		j = 20;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review20.txt");
+		break;
+	case 21:
+		j = 21;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review21.txt");
+		break;
+	case 22:
+		j = 22;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review22.txt");
+		break;
+	case 23:
+		j = 23;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review23.txt");
+		break;
+	case 24:
+		j = 24;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review24.txt");
+		break;
+	case 25:
+		j = 25;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review25.txt");
+		break;
+	case 26:
+		j = 26;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review26.txt");
+		break;
+	case 27:
+		j = 27;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review27.txt");
+		break;
+	case 28:
+		j = 28;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review28.txt");
+		break;
+	case 29:
+		j = 29;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review29.txt");
+		break;
+	case 30:
+		j = 30;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review30.txt");
+		break;
+	case 31:
+		j = 31;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review31.txt");
+		break;
+	case 32:
+		j = 32;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review32.txt");
+		break;
+	case 33:
+		j = 33;
+		printf("\n\n\n\t<%s>\n", list_place[j].name);
+		printf("   EXIT을 입력하면 종료합니다.\n");
+		printf("=================================\n\n\n");
+		review("review33.txt");
+		break;
+	}
+}
+
+
