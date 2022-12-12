@@ -1,3 +1,4 @@
+#define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 #include <windows.h>	
 #include <stdlib.h>
@@ -17,14 +18,14 @@ int x, y;		           // 전역변수 커서 좌표
 int condition;
 
 // 관광지의 정보를 담은 구조체
-typedef struct spot{
+typedef struct spot {
 	char name[20], address_phonenumber[200], information[300];   // 이름, 주소와 전화번호, 정보
 	int region, theme;                                           // 지역, 테마
 	float distance;                                              // 거리
 }SPOT;
 
 // 맛집의 정보를 담은 구조체
-typedef struct restaurant{
+typedef struct restaurant {
 	char name[30], address_phonenumber[200], information[300];   // 이름, 주소와 전화번호, 정보
 	int region, menu;                                            // 지역, 메뉴
 	float distance;                                              // 거리
@@ -191,7 +192,7 @@ void menu_display()
 	gotoxy(5, 16);	puts("1. 검   색");
 	gotoxy(25, 16);	puts("2. 정   렬");
 	gotoxy(45, 16);	puts("3. 카테고리");
-	gotoxy(65, 16);	puts("4. 상세정보"); 
+	gotoxy(65, 16);	puts("4. 상세정보");
 	gotoxy(85, 16);	puts("5. 리   뷰");
 
 	gotoxy(x, y);		// 모두 출력한 후, 원래의 커서 위치로 이동
@@ -277,16 +278,16 @@ void run(int x, int y)
 	else if (x == 42 && y == 16) // 3. 카테고리
 	{
 		int n = 0;
-		while (n != 1 && n != 2){
+		while (n != 1 && n != 2) {
 			menu_display();
 			gotoxy(1, 19);
 			if (condition == 101) {
 				printf("    카테고리 종류 선택 (1: 지역 / 2: 테마) : ");
 				scanf("%d", &n);
 				printf("\n");
-				if (n == 1) 
+				if (n == 1)
 					category_region_spot(list_spot); // 지역에 따라 관광지를 분류하는 함수 실행
-				else if (n == 2) 
+				else if (n == 2)
 					category_theme(list_spot); // 테마에 따라 관광지를 분류하는 함수 실행
 				else {
 					printf("\n\n                  잘못된 값을 입력하였습니다. 카테고리의 종류를 다시 입력해주세요");
@@ -297,9 +298,9 @@ void run(int x, int y)
 				printf("    카테고리 종류 선택 (1: 지역 / 2: 메뉴) : ");
 				scanf("%d", &n);
 				printf("\n");
-				if (n == 1) 
+				if (n == 1)
 					category_region_restaurant(list_restaurant); //지역에 따라 음식점을 분류하는 함수 실행
-				else if (n == 2) 
+				else if (n == 2)
 					category_menu(list_restaurant); // 메뉴에 따라 음식점을 분류하는 함수 실행
 				else {
 					printf("\n\n                  잘못된 값을 입력하였습니다. 카테고리의 종류를 다시 입력해주세요");
@@ -317,10 +318,10 @@ void run(int x, int y)
 	else if (x == 62 && y == 16) // 4. 상세사항
 	{
 		int n;
-	
+
 		menu_display();
 		gotoxy(1, 24);
-		
+
 		if (condition == 101)
 		{
 			print_spotlist(list_spot);
@@ -337,7 +338,7 @@ void run(int x, int y)
 			scanf("%d", &n);
 			details_restaurant(n - 1);
 		}
-		else 
+		else
 			printf("\n\    관광지 목록 보기 or 맛집 목록 보기를 선택 한 후 이용해주세요");
 	}
 
@@ -350,7 +351,7 @@ void run(int x, int y)
 }
 
 // (x,y)좌표로 커서를 이동
-void gotoxy(int x, int y)	
+void gotoxy(int x, int y)
 {
 	COORD pos = { x - 1,y - 1 };	// 원점은 (0,0)
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
@@ -398,7 +399,7 @@ void print_spotlist(SPOT* list_spot)
 	printf("  =========================================================================\n");
 	printf("       이름                        지역             테마            거리\n");
 	printf("  =========================================================================\n\n");
-	for (int i = 0; i < size_spot; i++) 
+	for (int i = 0; i < size_spot; i++)
 		printf("   %02d. %-18s\t%8s\t%11s\t%6.1f km\n\n", i + 1, list_spot[i].name, region(list_spot[i].region), theme(list_spot[i].theme), list_spot[i].distance);
 	printf("  =========================================================================\n\n");
 }
@@ -425,7 +426,7 @@ void search_spot()
 	scanf("%s", input);
 
 	// 탐색
-	for (int i = 0; i < size_spot; i++) 
+	for (int i = 0; i < size_spot; i++)
 	{
 		p = strstr(list_spot[i].name, input);
 
@@ -485,7 +486,7 @@ void search_restaurant()
 	// 출력
 	menu_display();
 	gotoxy(1, 18);
-	
+
 	printf("\n   \"%s\"에 관한 검색결과\n\t.\n\t.\n\t.\n\t.\n\n", input);
 	if (index[0] == 0)
 		printf("\n      \"%s\"에 관한 검색결과가 없습니다.\n", input);
@@ -866,9 +867,10 @@ void review(char* reviewName)
 	while (fgets(line, MAX, file) != NULL) {
 		printf("%s", line);
 	}
+	getchar();
 	while (1)
 	{
-		scanf("%s", contents);
+		scanf("%[^\n]", contents);
 		getchar();
 
 		if (strcmp(contents, "EXIT") == 0)
@@ -918,13 +920,20 @@ void search_place(PLACE list[size_place])
 
 
 
-	printf("\n\t\t<여행 일기를 남길 장소를 선택하세요>\n\n");
+	printf("\n   여행 일기를 남길 장소를 선택하세요.\n\n\n");
+	printf("\t\t\t\t\t========================\n");
+	printf("\t\t\t\t\t NO.      이름          \n");
+	printf("\t\t\t\t\t========================\n\n");
 	for (l = 1; l < size_place; l++)
 	{
-		printf("\t%d. %s\n", l, list_place[l].name);
+		printf("\t\t\t\t\t(%d) %s\n\n", l, list_place[l].name);
 	}
-	printf("\n\n[선택지]: ");
+	printf("\t\t\t\t\t========================\n");
+	printf("\t\t\t\t\t------------------------\n");
+	printf("\t\t\t\t\t========================\n\n");
+	printf("[번호 입력]: ");
 	scanf_s("%d", &SelectPlace);
+	printf("\n\n\n\n\n\n");
 	switch (SelectPlace)
 	{
 	case 1:
@@ -1160,5 +1169,4 @@ void search_place(PLACE list[size_place])
 		break;
 	}
 }
-
 
