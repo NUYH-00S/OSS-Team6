@@ -4,7 +4,6 @@
 #include <conio.h>	
 #include <stdbool.h>
 #include <string.h>
-#include <locale.h>
 
 #define PICK_spot                          101;
 #define PICK_restaurant                    102;
@@ -69,7 +68,6 @@ void search_place(PLACE list[size_place]);
 
 int main()
 {
-	setlocale(LC_ALL, "ko-KR");
 	char* stmp;
 	int itmp;
 	float ftmp;
